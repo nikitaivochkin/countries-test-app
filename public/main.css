@@ -4,6 +4,6 @@ body {
 
 .root {
     display: flex;
-    justify-content: center;
     min-height: inherit;
+    flex-direction: column;
 }
