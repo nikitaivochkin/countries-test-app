@@ -18,11 +18,7 @@ const actionCreators = {
 class MainInput extends React.Component {
   handleNewSearch = async (values) => {
     const { newSearch, reset } = this.props;
-    try {
-      await newSearch(values);
-    } catch (e) {
-      throw new SubmissionError({ _error: e.message });
-    }
+    await newSearch(values);
     reset();
   }
 

@@ -10,10 +10,19 @@ const getCurrentRoute = {
     Languge: 'getLanguge',
 };
 
-export const newSearchSuccess = createAction('NEW_SEARCH');
+export const newSearchRequest = createAction('NEW_SEARCH_REQUEST');
+export const newSearchSuccess = createAction('NEW_SEARCH_SUCCESS');
+export const newSearchFailure = createAction('NEW_SEARCH_FAILURE');
+
 
 export const newSearch = ({ text, selector }) => async (dispatch) => {
-    const url = routes[getCurrentRoute[selector]](text);
-    const responce = await axios.get(url);
-    dispatch(newSearchSuccess({ data: responce.data, currentSelecrot: selector }));
+    dispatch(newSearchRequest());
+    try {
+        const url = routes[getCurrentRoute[selector]](text);
+        const responce = await axios.get(url);
+        dispatch(newSearchSuccess({ data: responce.data, currentSelector: selector }));
+    } catch (e) {
+        dispatch(newSearchFailure());
+        throw e;
+    }
 };
