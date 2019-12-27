@@ -1,1 +1,1 @@
-# countries-test-app
+Countries-test-app (React, Redux)
