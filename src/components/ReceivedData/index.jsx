@@ -1,18 +1,18 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-import * as actions from '../../actions';
+import { reduxForm } from 'redux-form';
+import RenderElement from '../RenderElement';
+// import * as actions from '../../actions';
 import './main.sass';
+import allCountriesAlpha3Data from '../../assets/countryCodes.js';
+
 
 const mapStateToPorps = (state) => {
-  const { searchFetchingState, elements: { byId, allIds } } = state;
+  const { searchFetchingState, elements: { byId, allIds }, uiState } = state;
+  const { currentSelector } = uiState;
   const elements = allIds.map((id) => byId[id]);
-  return { searchFetchingState, elements };
-};
-
-const actionCreators = {
-
+  return { searchFetchingState, elements, currentSelector };
 };
 
 class ReceivedData extends React.Component {
@@ -38,21 +38,14 @@ class ReceivedData extends React.Component {
     }
 
     return elements.length > 0 && (
-        <div className="result">
-          <ul>
-            {elements.map(({ name }) => (
-              <li key={_.uniqueId()}>
-                {name}
-              </li>
-            ))}
-          </ul>
-          
+        <div key={_.uniqueId()} className="result">
+          {elements.map(RenderElement)}
         </div>
       ); 
   }
 };
 
-const ConnectedReceivedData = connect(mapStateToPorps, actionCreators)(ReceivedData);
+const ConnectedReceivedData = connect(mapStateToPorps)(ReceivedData);
 
 export default reduxForm({
   form: 'navBar',

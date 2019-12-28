@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { combineReducers } from 'redux';
-import { handleActions } from 'redux-actions';
+import { handleActions, handleAction } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions'
 
@@ -26,10 +26,26 @@ const elements = handleActions({
             currentSelecrot: currentSelector,
         };
     },
+    [actions.updateSelector](_state, { payload: { currentSelector } }) {
+        return {
+            byId: {},
+            allIds: [],
+            currentSelecrot: currentSelector,
+        };
+    },
 }, { byId: {}, allIds: [], currentSelector: 'Country' });
+
+const uiState = handleActions({
+    [actions.updateSelector](_state, { payload: { currentSelector } }) {
+        return {
+            currentSelector: currentSelector,
+        };
+    },
+}, {});
 
 export default combineReducers({
     searchFetchingState,
     elements,
+    uiState,
     form: formReducer,
 });

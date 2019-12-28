@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions';
 import './main.sass';
 
 const mapStateToPorps = (state) => {
   const props = {
     elements: state.elements,
+    uiState: state.uiState,
   };
   return props;
 };
 
 const actionCreators = {
   newSearch: actions.newSearch,
+  updateSelector: actions.updateSelector,
 };
 
 class MainInput extends React.Component {
@@ -22,6 +24,11 @@ class MainInput extends React.Component {
     reset();
   }
 
+  handleUpdateCurrentSelector = ({ target: { value } }) => {
+    const { updateSelector } = this.props;
+    updateSelector({ currentSelector: value });
+  }
+  
   render() {
     const { handleSubmit } = this.props;
 
@@ -33,8 +40,8 @@ class MainInput extends React.Component {
               <Field className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
             </div>
             <div className="search-bar-row row2">
-              <Field className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
-                <option className="search-bar-option" defaultValue="selected"></option>
+              <Field onChange={this.handleUpdateCurrentSelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
+                <option className="search-bar-option" defaultValue="selected">Make choise</option>
                 <option className="search-bar-option" value="Country">Country</option>
                 <option className="search-bar-option" value="Capital">Capital</option>
                 <option className="search-bar-option" value="Region">Region</option>
