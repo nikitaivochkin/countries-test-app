@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import RenderElement from '../RenderElement';
 // import * as actions from '../../actions';
 import './main.sass';
@@ -38,15 +37,11 @@ class ReceivedData extends React.Component {
     }
 
     return elements.length > 0 && (
-        <div key={_.uniqueId()} className="result">
-          {elements.map(RenderElement)}
+        <div className="result">
+          {elements.map((e) => <RenderElement key={_.uniqueId()} element={e}/>)}
         </div>
       ); 
   }
 };
 
-const ConnectedReceivedData = connect(mapStateToPorps)(ReceivedData);
-
-export default reduxForm({
-  form: 'navBar',
-})(ConnectedReceivedData);
+export default connect(mapStateToPorps)(ReceivedData);
