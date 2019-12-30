@@ -27,7 +27,7 @@ class RenderElement extends React.Component {
     render() {
         const { flag, name, id } = this.props.element;
         const { uiState: { isOpenEl } } = this.props;
-        
+
         const divStyle = {
             background: `url(${flag}) 100% 100%`,
             'backgroundSize': 'contain',
@@ -42,9 +42,11 @@ class RenderElement extends React.Component {
                 <div className="render-element" style={divStyle}>
                     <a onClick={this.handleOpenElement(id)} className="render-element-name">{name}</a>
                 </div>
-                <div className={openElclassName}>
-                    {name}
-                </div>
+                {isOpenEl[id]['status'] === 'open' && (
+                    <div className={openElclassName}>
+                        {name}
+                    </div>
+                )}
             </>
         );
     }
