@@ -12,6 +12,8 @@ const getCurrentRoute = {
 
 export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
+export const openElement = createAction('OPEN_ELEMENT');
+
 export const newSearchRequest = createAction('NEW_SEARCH_REQUEST');
 export const newSearchSuccess = createAction('NEW_SEARCH_SUCCESS');
 export const newSearchFailure = createAction('NEW_SEARCH_FAILURE');
