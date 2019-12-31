@@ -44,7 +44,23 @@ class RenderElement extends React.Component {
                 </div>
                 {isOpenEl[id]['status'] === 'open' && (
                     <div className={openElclassName}>
-                        {name}
+                        <div className="render-element-modal-content">
+                            <div className="modal-title">
+                                <h5 className="modal-title-text">{name}</h5>
+                                <span onClick={this.handleOpenElement(id)} className="modal-title-close">x</span>
+                            </div>
+                            <div className="modal-body">
+                                <div className="body-content">
+
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <div className="footer-button-block">
+                                    <a className="footer-button-prev">Prev</a>
+                                    <a className="footer-button-next">Next</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </>
