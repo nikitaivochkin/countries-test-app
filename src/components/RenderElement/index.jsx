@@ -15,6 +15,8 @@ const mapStateToPorps = (state) => {
   
 const actionCreators = {
     openElement: actions.openElement,
+    nextElement: actions.nextElement,
+    prevElement: actions.prevElement,
 };
 
 class RenderElement extends React.Component {
@@ -24,45 +26,149 @@ class RenderElement extends React.Component {
         openElement({ isOpenEl: { id } })
     }
 
+    handleSwitchToNextElement = (id) => (e) => {
+        e.preventDefault();
+        const { nextElement } = this.props;
+        nextElement({ isOpenEl: { id } })
+    }
+
+    handleSwitchToPrevElement = (id) => (e) => {
+        e.preventDefault();
+        const { prevElement } = this.props;
+        prevElement({ isOpenEl: { id } })
+    }
+
+    mappedBodyContent(el, margin = 0) {
+        const getAction = [
+            {
+                type: 'null',
+                check: (value) => (value === null || value === '' || value.length === 0),
+                action: (_key, _value) => null,
+            },
+            {
+                type: 'stringOrNumber',
+                check: (value) => (typeof value === 'string' || typeof value === 'number'),
+                action: (key, value) => (
+                    <div>
+                        <h3>{`${key}: `}</h3>
+                        <a>{value}</a>
+                    </div>
+                ),
+            },
+            {
+                type: 'array',
+                check: (value) => value instanceof Array,
+                action: (key, value) => {
+                    if (value.some((e) => e instanceof Object)) {
+                        return (
+                            <ul style={{ 'paddingLeft': 0 }}>
+                                <div>
+                                    {<h3>{`${key}:`}</h3>}
+                                    {value.map((e, index) => (
+                                        <ul key={_.uniqueId()} style={{ 'paddingLeft': 20 }}>
+                                            <div>
+                                                {<h5>{`${index + 1}th:`}</h5>}
+                                                {this.mappedBodyContent(e)}
+                                            </div>
+                                        </ul>                                    
+                                    ))}
+                                </div>
+                            </ul>
+                        );
+                    }
+                    return (
+                        <div>
+                            <h3>{`${key}: `}</h3>
+                            <a>{_.join(value, ', ')}</a>
+                        </div>
+                    );
+                },
+            },
+            {
+                type: 'object',
+                check: (value) => value instanceof Object,
+                action: (key, value) => {
+                    const newMargin = 20;
+                    return (
+                        <ul style={{ 'paddingLeft': 0 }}>
+                            <div>
+                                <h3>{`${key}: `}</h3>
+                                {this.mappedBodyContent(value, newMargin)}
+                            </div>
+                        </ul>
+                    );
+                },
+            },
+        ];
+
+        const keys = _.keys(_.omit(el, ['name', 'id', 'status']));
+
+        const findAction = (key, value) => {
+            const { type, action } = getAction.find(({ check }) => check(value));  
+            if (type === 'null') {
+                return null;
+            }
+            return action(key, value);
+        }
+        return keys.map((k) => {
+            if (findAction(k, el[k]) === null) {
+                return null;
+            }
+            return (
+                <li style={{ marginLeft: margin }} key={_.uniqueId()}>
+                    {findAction(k, el[k])}
+                </li>
+            )
+        });
+    };
+
     render() {
-        const { flag, name, id } = this.props.element;
+        const { element } = this.props;
+        const { flag, name, id } = element;
         const { uiState: { isOpenEl } } = this.props;
+        
+        const openElclassName = cn({
+            'render-element-full-show': true,
+            [isOpenEl[id]['status']]: true,
+        });
+        console.log(element)
+        const getModalWindow = () => {
+            return (
+                <div className={openElclassName}>
+                    <div className="render-element-modal-content">
+                        <div className="modal-title">
+                            <h5 className="modal-title-text">{name}</h5>
+                            <span onClick={this.handleOpenElement(id)} className="modal-title-close">x</span>
+                        </div>
+                        <div className="modal-body">
+                            <div className="body-content">
+                                <ul>
+                                    {this.mappedBodyContent(element)}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <div className="footer-button-block">
+                                <span onClick={this.handleSwitchToPrevElement(id)} className="footer-button-prev">Prev</span>
+                                <span onClick={this.handleSwitchToNextElement(id)} className="footer-button-next">Next</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
 
         const divStyle = {
             background: `url(${flag}) 100% 100%`,
             'backgroundSize': 'contain',
         };
-        const openElclassName = cn({
-            'render-element-full-show': true,
-            [isOpenEl[id]['status']]: true,
-        })
 
         return (
             <>
                 <div className="render-element" style={divStyle}>
                     <a onClick={this.handleOpenElement(id)} className="render-element-name">{name}</a>
                 </div>
-                {isOpenEl[id]['status'] === 'open' && (
-                    <div className={openElclassName}>
-                        <div className="render-element-modal-content">
-                            <div className="modal-title">
-                                <h5 className="modal-title-text">{name}</h5>
-                                <span onClick={this.handleOpenElement(id)} className="modal-title-close">x</span>
-                            </div>
-                            <div className="modal-body">
-                                <div className="body-content">
-
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <div className="footer-button-block">
-                                    <a className="footer-button-prev">Prev</a>
-                                    <a className="footer-button-next">Next</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                {isOpenEl[id]['status'] === 'open' && getModalWindow()}
             </>
         );
     }

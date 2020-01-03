@@ -57,10 +57,31 @@ const uiState = handleActions({
     },
     [actions.openElement](state, { payload: { isOpenEl: { id } } }) {
         const { currentSelecrot, isOpenEl } = state;
-        const f = (s) => (s === 'close' ? 'open' : 'close');
+        const switcher = (s) => (s === 'close' ? 'open' : 'close');
+        
         return {
             currentSelecrot,
-            isOpenEl: _.update(isOpenEl, `${id}.status`, f),
+            isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
+        };
+    },
+    [actions.nextElement](state, { payload: { isOpenEl: { id } } }) {
+        const { currentSelecrot, isOpenEl } = state;
+        const switcher = (s) => (s === 'close' ? 'open' : 'close');
+        const nextId = String(Number(id) + 1);
+        const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher)
+        return {
+            currentSelecrot,
+            isOpenEl: _.update(updatedNextEl, `${nextId}.status`, switcher),
+        };
+    },
+    [actions.prevElement](state, { payload: { isOpenEl: { id } } }) {
+        const { currentSelecrot, isOpenEl } = state;
+        const switcher = (s) => (s === 'close' ? 'open' : 'close');
+        const prevId = String(Number(id) - 1);
+        const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher)
+        return {
+            currentSelecrot,
+            isOpenEl: _.update(updatedNextEl, `${prevId}.status`, switcher),
         };
     },
 }, {});

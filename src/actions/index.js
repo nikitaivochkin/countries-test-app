@@ -14,6 +14,9 @@ export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
 export const openElement = createAction('OPEN_ELEMENT');
 
+export const nextElement = createAction('SWITCH_TO_NEXT_ELEMENT');
+export const prevElement = createAction('SWITCH_TO_PREV_ELEMENT');
+
 export const newSearchRequest = createAction('NEW_SEARCH_REQUEST');
 export const newSearchSuccess = createAction('NEW_SEARCH_SUCCESS');
 export const newSearchFailure = createAction('NEW_SEARCH_FAILURE');
