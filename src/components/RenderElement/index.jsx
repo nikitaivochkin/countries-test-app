@@ -51,7 +51,7 @@ class RenderElement extends React.Component {
                 action: (key, value) => (
                     <div>
                         <h3>{`${key}: `}</h3>
-                        <a>{value}</a>
+                        <span>{value}</span>
                     </div>
                 ),
             },
@@ -79,7 +79,7 @@ class RenderElement extends React.Component {
                     return (
                         <div>
                             <h3>{`${key}: `}</h3>
-                            <a>{_.join(value, ', ')}</a>
+                            <span>{_.join(value, ', ')}</span>
                         </div>
                     );
                 },
@@ -126,12 +126,11 @@ class RenderElement extends React.Component {
         const { element } = this.props;
         const { flag, name, id } = element;
         const { uiState: { isOpenEl } } = this.props;
-        
         const openElclassName = cn({
             'render-element-full-show': true,
             [isOpenEl[id]['status']]: true,
         });
-        console.log(element)
+
         const getModalWindow = () => {
             return (
                 <div className={openElclassName}>
@@ -149,8 +148,8 @@ class RenderElement extends React.Component {
                         </div>
                         <div className="modal-footer">
                             <div className="footer-button-block">
-                                <span onClick={this.handleSwitchToPrevElement(id)} className="footer-button-prev">Prev</span>
-                                <span onClick={this.handleSwitchToNextElement(id)} className="footer-button-next">Next</span>
+                                <button href="#" onClick={this.handleSwitchToPrevElement(id)} className="footer-button-prev">Prev</button>
+                                <button href="#" onClick={this.handleSwitchToNextElement(id)} className="footer-button-next">Next</button>
                             </div>
                         </div>
                     </div>
@@ -159,14 +158,14 @@ class RenderElement extends React.Component {
         }
 
         const divStyle = {
-            background: `url(${flag}) 100% 100%`,
-            'backgroundSize': 'contain',
+            background: `url(${flag}) 90% 90%`,
+            'backgroundSize': 'cover',
         };
 
         return (
             <>
-                <div className="render-element" style={divStyle}>
-                    <a onClick={this.handleOpenElement(id)} className="render-element-name">{name}</a>
+                <div onClick={this.handleOpenElement(id)} className="render-element" style={divStyle}>
+                    <span className="render-element-name">{name}</span>
                 </div>
                 {isOpenEl[id]['status'] === 'open' && getModalWindow()}
             </>

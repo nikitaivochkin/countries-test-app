@@ -36,11 +36,9 @@ const elements = handleActions({
 }, { byId: {}, allIds: [], currentSelector: 'Country' });
 
 const uiState = handleActions({
-    [actions.updateSelector](state, { payload: { currentSelector } }) {
-        const { isOpenEl } = state;
+    [actions.updateSelector](_state, { payload: { currentSelector } }) {
         return {
             currentSelector: currentSelector,
-            isOpenEl,
         };
     },
     [actions.newSearchSuccess](state, { payload: { data } }) {
@@ -51,36 +49,41 @@ const uiState = handleActions({
             return _.pick(setStatus, ['id', 'status']);
         });
         return {
-            currentSelecrot,
+            currentSelecrot: currentSelecrot,
             isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
         }
     },
     [actions.openElement](state, { payload: { isOpenEl: { id } } }) {
         const { currentSelecrot, isOpenEl } = state;
         const switcher = (s) => (s === 'close' ? 'open' : 'close');
-        
         return {
-            currentSelecrot,
+            currentSelecrot: currentSelecrot,
             isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
         };
     },
     [actions.nextElement](state, { payload: { isOpenEl: { id } } }) {
         const { currentSelecrot, isOpenEl } = state;
+        const keys = _.keys(isOpenEl);
+        const firstEl = _.head(keys);
+        const lastEl = _.last(keys);
         const switcher = (s) => (s === 'close' ? 'open' : 'close');
-        const nextId = String(Number(id) + 1);
+        const nextId = id === lastEl ? firstEl : String(Number(id) + 1);
         const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher)
         return {
-            currentSelecrot,
+            currentSelecrot: currentSelecrot,
             isOpenEl: _.update(updatedNextEl, `${nextId}.status`, switcher),
         };
     },
     [actions.prevElement](state, { payload: { isOpenEl: { id } } }) {
         const { currentSelecrot, isOpenEl } = state;
+        const keys = _.keys(isOpenEl);
+        const firstEl = _.head(keys);
+        const lastEl = _.last(keys);
         const switcher = (s) => (s === 'close' ? 'open' : 'close');
-        const prevId = String(Number(id) - 1);
-        const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher)
+        const prevId = id === firstEl ? lastEl : String(Number(id) - 1);
+        const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher);
         return {
-            currentSelecrot,
+            currentSelecrot: currentSelecrot,
             isOpenEl: _.update(updatedNextEl, `${prevId}.status`, switcher),
         };
     },
