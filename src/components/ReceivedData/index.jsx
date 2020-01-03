@@ -15,7 +15,6 @@ const mapStateToPorps = (state) => {
 };
 
 class ReceivedData extends React.Component {
-
   render() {
     const { searchFetchingState, elements } = this.props;
 
@@ -37,11 +36,11 @@ class ReceivedData extends React.Component {
     }
 
     return elements.length > 0 && (
-        <div className="result">
-          {elements.map((e) => <RenderElement key={_.uniqueId()} element={e}/>)}
-        </div>
-      ); 
+    <div className="result">
+      {elements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
+    </div>
+    );
   }
-};
+}
 
 export default connect(mapStateToPorps)(ReceivedData);

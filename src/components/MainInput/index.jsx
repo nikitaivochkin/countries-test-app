@@ -61,5 +61,5 @@ class MainInput extends React.Component {
 const ConnectedMainInput = connect(mapStateToPorps, actionCreators)(MainInput);
 
 export default reduxForm({
-    form: 'MainInput',
+  form: 'MainInput',
 })(ConnectedMainInput);
