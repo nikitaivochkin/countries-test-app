@@ -28,7 +28,7 @@ class MainInput extends React.Component {
     const { updateSelector } = this.props;
     updateSelector({ currentSelector: value });
   }
-  
+
   render() {
     const { handleSubmit } = this.props;
 
@@ -49,14 +49,14 @@ class MainInput extends React.Component {
               </Field>
             </div>
             <div className="serch-bar-button" type="submit">
-              <button>Search</button>
+              <button type="submit">Search</button>
             </div>
           </div>
         </form>
       </div>
     );
   }
-};
+}
 
 const ConnectedMainInput = connect(mapStateToPorps, actionCreators)(MainInput);
 

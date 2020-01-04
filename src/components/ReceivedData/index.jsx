@@ -2,10 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import RenderElement from '../RenderElement';
-// import * as actions from '../../actions';
 import './main.sass';
-import allCountriesAlpha3Data from '../../assets/countryCodes.js';
-
 
 const mapStateToPorps = (state) => {
   const { searchFetchingState, elements: { byId, allIds }, uiState } = state;
@@ -26,8 +23,7 @@ class ReceivedData extends React.Component {
           </div>
         </div>
       );
-    }
-    if (searchFetchingState === 'failed') {
+    } if (searchFetchingState === 'failed') {
       return (
         <div className="result">
           <span>Nothing was found. Try again!</span>
@@ -36,9 +32,9 @@ class ReceivedData extends React.Component {
     }
 
     return elements.length > 0 && (
-    <div className="result">
-      {elements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
-    </div>
+      <div className="result">
+        {elements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
+      </div>
     );
   }
 }

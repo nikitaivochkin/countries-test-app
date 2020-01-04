@@ -42,7 +42,7 @@ class RenderElement extends React.Component {
         {
           type: 'null',
           check: (value) => (value === null || value === '' || value.length === 0),
-          action: (_key, _value) => null,
+          action: () => null,
         },
         {
           type: 'stringOrNumber',
@@ -135,7 +135,15 @@ class RenderElement extends React.Component {
           <div className="render-element-modal-content">
             <div className="modal-title">
               <h5 className="modal-title-text">{name}</h5>
-              <span onClick={this.handleOpenElement(id)} className="modal-title-close">x</span>
+              <span
+                onClick={this.handleOpenElement(id)}
+                onKeyDown={this.handleOpenElement(id)}
+                role="button"
+                tabIndex={0}
+                className="modal-title-close"
+              >
+                x
+              </span>
             </div>
             <div className="modal-body">
               <div className="body-content">
@@ -146,8 +154,8 @@ class RenderElement extends React.Component {
             </div>
             <div className="modal-footer">
               <div className="footer-button-block">
-                <button href="#" onClick={this.handleSwitchToPrevElement(id)} className="footer-button-prev">Prev</button>
-                <button href="#" onClick={this.handleSwitchToNextElement(id)} className="footer-button-next">Next</button>
+                <button href="#" onClick={this.handleSwitchToPrevElement(id)} type="button" className="footer-button-prev">Prev</button>
+                <button href="#" onClick={this.handleSwitchToNextElement(id)} type="button" className="footer-button-next">Next</button>
               </div>
             </div>
           </div>
@@ -161,7 +169,14 @@ class RenderElement extends React.Component {
 
       return (
         <>
-          <div onClick={this.handleOpenElement(id)} className="render-element" style={divStyle}>
+          <div
+            onClick={this.handleOpenElement(id)}
+            onKeyDown={this.handleOpenElement(id)}
+            role="button"
+            tabIndex={0}
+            className="render-element"
+            style={divStyle}
+          >
             <span className="render-element-name">{name}</span>
           </div>
           {isOpenEl[id].status === 'open' && getModalWindow()}
