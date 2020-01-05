@@ -1,7 +1,6 @@
 install: install-deps install-flow-typed
 
 start:
-	rm -rf dist
 	npm start
 
 develop:
