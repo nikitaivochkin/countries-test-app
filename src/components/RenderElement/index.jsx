@@ -7,6 +7,7 @@ import './main.sass';
 
 const mapStateToPorps = (state) => {
   const props = {
+    text: state.text,
     elements: state.elements,
     uiState: state.uiState,
   };
@@ -15,8 +16,7 @@ const mapStateToPorps = (state) => {
 
 const actionCreators = {
   openElement: actions.openElement,
-  nextElement: actions.nextElement,
-  prevElement: actions.prevElement,
+  nextOrPrevElement: actions.nextOrPrevElement,
 };
 
 class RenderElement extends React.Component {
@@ -27,14 +27,9 @@ class RenderElement extends React.Component {
 
     handleSwitchToNextElement = (id) => (e) => {
       e.preventDefault();
-      const { nextElement } = this.props;
-      nextElement({ isOpenEl: { id } });
-    }
-
-    handleSwitchToPrevElement = (id) => (e) => {
-      e.preventDefault();
-      const { prevElement } = this.props;
-      prevElement({ isOpenEl: { id } });
+      const type = e.target.attributes.getNamedItem('mydata').value;
+      const { nextOrPrevElement } = this.props;
+      nextOrPrevElement({ isOpenEl: { id, type } });
     }
 
     mappedBodyContent(el, margin = 0) {
@@ -122,6 +117,7 @@ class RenderElement extends React.Component {
     }
 
     render() {
+      const { text } = this.props;
       const { element } = this.props;
       const { flag, name, id } = element;
       const { uiState: { isOpenEl } } = this.props;
@@ -154,8 +150,8 @@ class RenderElement extends React.Component {
             </div>
             <div className="modal-footer">
               <div className="footer-button-block">
-                <button href="#" onClick={this.handleSwitchToPrevElement(id)} type="button" className="footer-button-prev">Prev</button>
-                <button href="#" onClick={this.handleSwitchToNextElement(id)} type="button" className="footer-button-next">Next</button>
+                <button href="#" onClick={this.handleSwitchToNextElement(id)} mydata="prev" type="button" className="footer-button-prev">Prev</button>
+                <button href="#" onClick={this.handleSwitchToNextElement(id)} mydata="next" type="button" className="footer-button-next">Next</button>
               </div>
             </div>
           </div>
@@ -166,6 +162,10 @@ class RenderElement extends React.Component {
         background: `url(${flag}) 90% 90%`,
         backgroundSize: 'cover',
       };
+
+      if (text === '') {
+        return null;
+      }
 
       return (
         <>
@@ -184,5 +184,4 @@ class RenderElement extends React.Component {
       );
     }
 }
-
 export default connect(mapStateToPorps, actionCreators)(RenderElement);

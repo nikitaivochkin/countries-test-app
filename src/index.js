@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
-import MainInput from './components/MainInput';
-import ReceivedData from './components/ReceivedData';
+import App from './components/App';
 import reducers from './reducers';
+import { fetchElements } from './actions';
 
 /* eslint-disable no-underscore-dangle */
 const ext = window.__REDUX_DEVTOOLS_EXTENSION__;
@@ -20,11 +20,12 @@ const store = createStore(
   ),
 );
 
+store.dispatch(fetchElements());
+
 ReactDOM.render(
   // eslint-disable-next-line react/jsx-filename-extension
   <Provider store={store}>
-    <MainInput />
-    <ReceivedData />
+    <App />
   </Provider>,
   document.getElementById('root'),
 );

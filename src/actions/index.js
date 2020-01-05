@@ -9,26 +9,29 @@ const getCurrentRoute = {
   Languge: 'getLanguge',
 };
 
+export const updateText = createAction('UPDATE_TEXT');
+
 export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
 export const openElement = createAction('OPEN_ELEMENT');
 
-export const nextElement = createAction('SWITCH_TO_NEXT_ELEMENT');
-export const prevElement = createAction('SWITCH_TO_PREV_ELEMENT');
+export const nextOrPrevElement = createAction('SWITCH_TO_NEXT_OR_PREV_ELEMENT');
 
-export const newSearchRequest = createAction('NEW_SEARCH_REQUEST');
-export const newSearchSuccess = createAction('NEW_SEARCH_SUCCESS');
-export const newSearchFailure = createAction('NEW_SEARCH_FAILURE');
+export const findElementBySelector = createAction('FIND_ELEMENT_BY_SELECTOR');
+
+export const fetchElementsRequest = createAction('NEW_SEARCH_REQUEST');
+export const fetchElementsSuccess = createAction('NEW_SEARCH_SUCCESS');
+export const fetchElementsFailure = createAction('NEW_SEARCH_FAILURE');
 
 
-export const newSearch = ({ text, selector }) => async (dispatch) => {
-  dispatch(newSearchRequest());
+export const fetchElements = () => async (dispatch) => {
+  dispatch(fetchElementsRequest());
   try {
-    const url = routes[getCurrentRoute[selector]](text);
+    const url = 'https://restcountries.eu/rest/v2/all';
     const responce = await axios.get(url);
-    dispatch(newSearchSuccess({ data: responce.data, currentSelector: selector }));
+    dispatch(fetchElementsSuccess({ data: responce.data }));
   } catch (e) {
-    dispatch(newSearchFailure());
+    dispatch(fetchElementsFailure());
     throw e;
   }
 };

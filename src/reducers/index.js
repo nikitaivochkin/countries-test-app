@@ -4,44 +4,60 @@ import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
-const searchFetchingState = handleActions({
-  [actions.newSearchRequest]() {
+const elementsFetchState = handleActions({
+  [actions.fetchElementsRequest]() {
     return 'requested';
   },
-  [actions.newSearchFailure]() {
+  [actions.fetchElementsFailure]() {
     return 'failed';
   },
-  [actions.newSearchSuccess]() {
+  [actions.fetchElementsSuccess]() {
     return 'finished';
   },
 }, 'none');
 
+const text = handleActions({
+  [actions.updateText](_state, { payload }) {
+    return payload.text;
+  },
+  [actions.updateSelector]() {
+    return '';
+  },
+}, '');
+
 const elements = handleActions({
-  [actions.newSearchSuccess](_state, { payload: { data, currentSelector } }) {
+  [actions.fetchElementsSuccess](state, { payload: { data } }) {
+    const { selector } = state;
     const setIdForEachEl = data.map((e) => _.set(e, 'id', _.uniqueId()));
     const allIdsElements = setIdForEachEl.map((e) => e.id);
     return {
       byId: _.mapKeys({ ...setIdForEachEl }, (key) => key.id),
       allIds: [...allIdsElements],
-      currentSelecrot: currentSelector,
+      selector,
     };
   },
-  [actions.updateSelector](_state, { payload: { currentSelector } }) {
+  [actions.findElementBySelector](state, { payload: { text } }) {
+    const { byId, selector } = state;
+    const mapped = _.pickBy(byId, (el) => (el[selector].includes(text)
+      || el[selector].includes(_.capitalize(text))));
     return {
-      byId: {},
-      allIds: [],
-      currentSelecrot: currentSelector,
+      byId,
+      allIds: _.keys(mapped),
+      selector,
     };
   },
-}, { byId: {}, allIds: [], currentSelector: 'Country' });
+  [actions.updateSelector](state, { payload: { newSelector } }) {
+    const { byId, allIds } = state;
+    return {
+      byId,
+      allIds,
+      selector: newSelector,
+    };
+  },
+}, { byId: {}, allIds: [], selector: 'name' });
 
 const uiState = handleActions({
-  [actions.updateSelector](_state, { payload: { currentSelector } }) {
-    return {
-      currentSelector,
-    };
-  },
-  [actions.newSearchSuccess](state, { payload: { data } }) {
+  [actions.fetchElementsSuccess](state, { payload: { data } }) {
     const { currentSelecrot } = state;
     const setIdAndStatusForEachEl = data.map((e) => {
       const setId = _.set(e, 'id', _.uniqueId());
@@ -61,36 +77,25 @@ const uiState = handleActions({
       isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
     };
   },
-  [actions.nextElement](state, { payload: { isOpenEl: { id } } }) {
+  [actions.nextOrPrevElement](state, { payload: { isOpenEl: { id, type } } }) {
     const { currentSelecrot, isOpenEl } = state;
     const keys = _.keys(isOpenEl);
     const firstEl = _.head(keys);
     const lastEl = _.last(keys);
-    const switcher = (s) => (s === 'close' ? 'open' : 'close');
     const nextId = id === lastEl ? firstEl : String(Number(id) + 1);
-    const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher);
-    return {
-      currentSelecrot,
-      isOpenEl: _.update(updatedNextEl, `${nextId}.status`, switcher),
-    };
-  },
-  [actions.prevElement](state, { payload: { isOpenEl: { id } } }) {
-    const { currentSelecrot, isOpenEl } = state;
-    const keys = _.keys(isOpenEl);
-    const firstEl = _.head(keys);
-    const lastEl = _.last(keys);
-    const switcher = (s) => (s === 'close' ? 'open' : 'close');
     const prevId = id === firstEl ? lastEl : String(Number(id) - 1);
-    const updatedNextEl = _.update(isOpenEl, `${id}.status`, switcher);
+    const switcher = (s) => (s === 'close' ? 'open' : 'close');
+    const updatedCurrentEl = _.update(isOpenEl, `${id}.status`, switcher);
     return {
       currentSelecrot,
-      isOpenEl: _.update(updatedNextEl, `${prevId}.status`, switcher),
+      isOpenEl: _.update(updatedCurrentEl, `${type === 'next' ? nextId : prevId}.status`, switcher),
     };
   },
 }, {});
 
 export default combineReducers({
-  searchFetchingState,
+  text,
+  elementsFetchState,
   elements,
   uiState,
   form: formReducer,
