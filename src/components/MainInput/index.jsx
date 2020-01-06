@@ -1,7 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions';
 import './main.sass';
 
@@ -20,13 +19,6 @@ const actionCreators = {
 };
 
 class MainInput extends React.Component {
-  // handleNewSearch = async (values) => {
-  //   const { newSearch, reset } = this.props;
-  //   await newSearch(values);
-  //   reset();
-  // }
-
-
   handleUpdateCurrentSelector = ({ target: { value } }) => {
     const { updateSelector } = this.props;
     updateSelector({ newSelector: value });
@@ -35,7 +27,7 @@ class MainInput extends React.Component {
   handleAutocompliteBySelector = ({ target: { value } }) => {
     const { updateText, findElementBySelector } = this.props;
     updateText({ text: value });
-    findElementBySelector({ text: value });
+    findElementBySelector({ inputValue: value });
   }
 
   render() {
@@ -47,35 +39,28 @@ class MainInput extends React.Component {
           <div className="row">
             <div className="search-bar-row row1">
               {selector === 'region' ? null : (
-                <Field onChange={this.handleAutocompliteBySelector} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
+                <input onChange={this.handleAutocompliteBySelector} disabled={selector === 'disabled'} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
               )}
             </div>
+            {selector === 'region' ? (
+              <div className="search-bar-row row3">
+                <select onChange={this.handleAutocompliteBySelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
+                  <option className="search-bar-option" value="disabled">Make choose</option>
+                  <option className="search-bar-option" value="africa">Africa</option>
+                  <option className="search-bar-option" value="americas">Americas</option>
+                  <option className="search-bar-option" value="europe" defaultValue>Europe</option>
+                  <option className="search-bar-option" value="oceania">Oceania</option>
+                </select>
+              </div>
+            ) : null}
             <div className="search-bar-row row2">
-              <Field onChange={this.handleUpdateCurrentSelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
-                <option defaultValue="none" disabled hidden>
-                  Select an Option
-                </option>
+              <select onChange={this.handleUpdateCurrentSelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
+                <option className="search-bar-option" value="disabled">Make choose</option>
                 <option className="search-bar-option" value="name">Country</option>
                 <option className="search-bar-option" value="capital">Capital</option>
                 <option className="search-bar-option" value="region">Region</option>
                 <option className="search-bar-option" value="languages">Languge</option>
-              </Field>
-            </div>
-            {selector === 'region' ? (
-              <div className="search-bar-row row3">
-                <Field onChange={this.handleAutocompliteBySelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
-                  <option defaultValue="none" disabled hidden>
-                    Select an Option
-                  </option>
-                  <option className="search-bar-option" value="africa">Africa</option>
-                  <option className="search-bar-option" value="americas">Americas</option>
-                  <option className="search-bar-option" value="europe">Europe</option>
-                  <option className="search-bar-option" value="oceania">Oceania</option>
-                </Field>
-              </div>
-            ) : null}
-            <div className="serch-bar-button" type="submit">
-              <button type="submit">Search</button>
+              </select>
             </div>
           </div>
         </form>
@@ -84,8 +69,4 @@ class MainInput extends React.Component {
   }
 }
 
-const ConnectedMainInput = connect(mapStateToPorps, actionCreators)(MainInput);
-
-export default reduxForm({
-  form: 'MainInput',
-})(ConnectedMainInput);
+export default connect(mapStateToPorps, actionCreators)(MainInput);

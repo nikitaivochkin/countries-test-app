@@ -25,28 +25,29 @@ const text = handleActions({
   },
 }, '');
 
+let filtred;
+
 const elements = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
     const { selector } = state;
-    const setIdForEachEl = data.map((e) => _.set(e, 'id', _.uniqueId()));
-    const allIdsElements = setIdForEachEl.map((e) => e.id);
+    const allIdsElements = data.map((e) => e.id);
     return {
-      byId: _.mapKeys({ ...setIdForEachEl }, (key) => key.id),
+      byId: _.mapKeys({ ...data }, (key) => key.id),
       allIds: [...allIdsElements],
       selector,
     };
   },
-  [actions.findElementBySelector](state, { payload: { text } }) {
+  [actions.findElementBySelector](state, { payload: { inputValue } }) {
     const { byId, selector } = state;
     const mapped = _.pickBy(byId, (el) => {
       if (selector === 'languages') {
-        return el[selector].map((e) => (e.name.includes(text)
-          || e.name.includes(_.capitalize(text)))).some((e) => e === true);
+        return el[selector].map((e) => (e.name.includes(inputValue)
+          || e.name.includes(_.capitalize(inputValue)))).some((e) => e === true);
       }
-      return (el[selector].includes(text)
-      || el[selector].includes(_.capitalize(text)));
+      return (el[selector].includes(inputValue)
+      || el[selector].includes(_.capitalize(inputValue)));
     });
-
+    filtred = _.keys(mapped);
     return {
       byId,
       allIds: _.keys(mapped),
@@ -61,24 +62,35 @@ const elements = handleActions({
       selector: newSelector,
     };
   },
-}, { byId: {}, allIds: [], selector: 'name' });
+}, { byId: {}, allIds: [], selector: 'disabled' });
+
+let allUIStateData;
 
 const uiState = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
     const { currentSelecrot } = state;
     const setIdAndStatusForEachEl = data.map((e) => {
-      const setId = _.set(e, 'id', _.uniqueId());
-      const setStatus = _.set(setId, 'status', 'close');
-      return _.pick(setStatus, ['id', 'status']);
+      const setOpenStatus = _.set(e, 'status', 'close');
+      return _.pick(setOpenStatus, ['id', 'status']);
     });
+    allUIStateData = _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id);
     return {
       currentSelecrot,
       isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
     };
   },
+  [actions.findElementBySelector](state) {
+    const { currentSelecrot } = state;
+    const updated = _.pick(allUIStateData, filtred);
+    return {
+      currentSelecrot,
+      isOpenEl: updated,
+    };
+  },
   [actions.openElement](state, { payload: { isOpenEl: { id } } }) {
     const { currentSelecrot, isOpenEl } = state;
     const switcher = (s) => (s === 'close' ? 'open' : 'close');
+
     return {
       currentSelecrot,
       isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
@@ -87,10 +99,11 @@ const uiState = handleActions({
   [actions.nextOrPrevElement](state, { payload: { isOpenEl: { id, type } } }) {
     const { currentSelecrot, isOpenEl } = state;
     const keys = _.keys(isOpenEl);
+    const currentElIndex = _.findIndex(keys, (e) => e === id);
     const firstEl = _.head(keys);
     const lastEl = _.last(keys);
-    const nextId = id === lastEl ? firstEl : String(Number(id) + 1);
-    const prevId = id === firstEl ? lastEl : String(Number(id) - 1);
+    const nextId = id === lastEl ? firstEl : keys[currentElIndex + 1];
+    const prevId = id === firstEl ? lastEl : keys[currentElIndex - 1];
     const switcher = (s) => (s === 'close' ? 'open' : 'close');
     const updatedCurrentEl = _.update(isOpenEl, `${id}.status`, switcher);
     return {

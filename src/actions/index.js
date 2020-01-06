@@ -1,13 +1,14 @@
+import _ from 'lodash';
 import axios from 'axios';
 import { createAction } from 'redux-actions';
-import routes from '../routes';
+// import routes from '../routes';
 
-const getCurrentRoute = {
-  Country: 'getCountries',
-  Capital: 'getCapitalSities',
-  Region: 'getRegion',
-  Languge: 'getLanguge',
-};
+// const getCurrentRoute = {
+//   Country: 'getCountries',
+//   Capital: 'getCapitalSities',
+//   Region: 'getRegion',
+//   Languge: 'getLanguge',
+// };
 
 export const updateText = createAction('UPDATE_TEXT');
 
@@ -29,7 +30,8 @@ export const fetchElements = () => async (dispatch) => {
   try {
     const url = 'https://restcountries.eu/rest/v2/all';
     const responce = await axios.get(url);
-    dispatch(fetchElementsSuccess({ data: responce.data }));
+    const setIdToData = responce.data.map((e) => _.set(e, 'id', _.uniqueId()))
+    dispatch(fetchElementsSuccess({ data: setIdToData }));
   } catch (e) {
     dispatch(fetchElementsFailure());
     throw e;
