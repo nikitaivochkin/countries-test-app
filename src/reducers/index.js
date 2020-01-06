@@ -38,8 +38,15 @@ const elements = handleActions({
   },
   [actions.findElementBySelector](state, { payload: { text } }) {
     const { byId, selector } = state;
-    const mapped = _.pickBy(byId, (el) => (el[selector].includes(text)
-      || el[selector].includes(_.capitalize(text))));
+    const mapped = _.pickBy(byId, (el) => {
+      if (selector === 'languages') {
+        return el[selector].map((e) => (e.name.includes(text)
+          || e.name.includes(_.capitalize(text)))).some((e) => e === true);
+      }
+      return (el[selector].includes(text)
+      || el[selector].includes(_.capitalize(text)));
+    });
+
     return {
       byId,
       allIds: _.keys(mapped),
