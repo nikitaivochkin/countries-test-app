@@ -90,7 +90,6 @@ const uiState = handleActions({
   [actions.openElement](state, { payload: { isOpenEl: { id } } }) {
     const { currentSelecrot, isOpenEl } = state;
     const switcher = (s) => (s === 'close' ? 'open' : 'close');
-
     return {
       currentSelecrot,
       isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
