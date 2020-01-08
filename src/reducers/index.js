@@ -17,8 +17,8 @@ const elementsFetchState = handleActions({
 }, 'none');
 
 const text = handleActions({
-  [actions.updateText](_state, { payload }) {
-    return payload.text;
+  [actions.updateText](_state, { payload: { value } }) {
+    return value;
   },
   [actions.updateSelector]() {
     return '';
