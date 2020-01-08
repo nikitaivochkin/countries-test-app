@@ -40,7 +40,7 @@ const elements = handleActions({
   [actions.findElementBySelector](state, { payload: { inputValue } }) {
     const { byId, selector } = state;
     const mapped = _.pickBy(byId, (el) => {
-      if (selector === 'languages') {
+      if (selector === 'languages' || selector === 'regionalBlocs') {
         return el[selector].map((e) => (e.name.includes(inputValue)
           || e.name.includes(_.capitalize(inputValue)))).some((e) => e === true);
       }
