@@ -28,6 +28,7 @@ class ModalWindow extends React.Component {
     }
 
     mappedBodyContent(el, margin = 0) {
+      const getNormalizedString = (str) => _.capitalize(_.lowerCase(str));
       const getAction = [
         {
           type: 'null',
@@ -39,7 +40,7 @@ class ModalWindow extends React.Component {
           check: (value) => (typeof value === 'string' || typeof value === 'number'),
           action: (key, value) => (
             <div className="body-content-element">
-              <h3 className="body-content-element-title">{`${key}: `}</h3>
+              <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
               <span>{value}</span>
             </div>
           ),
@@ -51,9 +52,9 @@ class ModalWindow extends React.Component {
             if (value.some((e) => e instanceof Object)) {
               return (
                 <div className="body-content-element">
-                  {<h3 className="body-content-element-title">{`${key}:`}</h3>}
+                  {<h3 className="body-content-element-title inside">{`${getNormalizedString(key)}:`}</h3>}
                   {value.map((e) => (
-                    <div key={_.uniqueId()} className="body-content-element-inside" style={{ paddingLeft: 20 }}>
+                    <div key={_.uniqueId()} className="body-content-element inside" style={{ paddingLeft: 20 }}>
                       {this.mappedBodyContent(e)}
                     </div>
                   ))}
@@ -62,7 +63,7 @@ class ModalWindow extends React.Component {
             }
             return (
               <div className="body-content-element">
-                <h3 className="body-content-element-title">{`${key}: `}</h3>
+                <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
                 <span>{_.join(value, ', ')}</span>
               </div>
             );
@@ -74,8 +75,8 @@ class ModalWindow extends React.Component {
           action: (key, value) => {
             const newMargin = 20;
             return (
-              <div className="body-content-element" style={{ paddingLeft: 0 }}>
-                <h3 className="body-content-element-title">{`${key}: `}</h3>
+              <div className="body-content-element inside" style={{ paddingLeft: 0 }}>
+                <h3 className="body-content-element-title inside">{`${getNormalizedString(key)}: `}</h3>
                 {this.mappedBodyContent(value, newMargin)}
               </div>
             );
@@ -97,7 +98,7 @@ class ModalWindow extends React.Component {
           return null;
         }
         return (
-          <div className="body-content-element-li" style={{ marginLeft: margin }} key={_.uniqueId()}>
+          <div className="body-content-element" style={{ marginLeft: margin }} key={_.uniqueId()}>
             {findAction(k, el[k])}
           </div>
         );
@@ -106,6 +107,7 @@ class ModalWindow extends React.Component {
 
     render() {
       const { element, handleOpenElement } = this.props;
+      console.log(element)
       const { name, id } = element;
       const { uiState: { isOpenEl } } = this.props;
       const openElclassName = cn({
