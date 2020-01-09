@@ -1,4 +1,4 @@
-export const regions = [['disabled', 'Make choose'],
+export const regions = [['disabled', 'Choose region'],
     ['africa', 'Africa'],
     ['americas', 'Americas'],
     ['europe', 'Europe'],
@@ -17,3 +17,60 @@ export const regionalBlocs = [['disabled', 'Make choose'],
     ['Central European Free Trade Agreement', 'CEFTA (Central European Free Trade Agreement)'],
     ['North American Free Trade Agreement', 'NAFTA (North American Free Trade Agreement)'],
     ['South Asian Association for Regional Cooperation', 'SAARC (South Asian Association for Regional Cooperation)']];
+
+export const regionsAndSubregions = {
+        region: [
+        {
+            "name": "africa",
+            "subregions": [
+                "Choose subregion",
+                "Eastern Africa",
+                "Middle Africa",
+                "Northern Africa",
+                "Southern Africa",
+                "Western Africa"
+            ]
+        },
+        {
+            "name": "americas",
+            "subregions": [
+                "Choose subregion",
+                "Caribbean",
+                "Central America",
+                "South America",
+                "Northern America"
+            ]
+        },
+        {
+            "name": "asia",
+            "subregions": [
+                "Choose subregion",
+                "Central Asia",
+                "Eastern Asia",
+                "Southern Asia",
+                "South-Eastern Asia",
+                "Western Asia"
+            ]
+        },
+        {
+            "name": "europe",
+            "subregions": [
+                "Choose subregion",
+                "Eastern Europe",
+                "Northern Europe",
+                "Southern Europe",
+                "Western Europe"
+            ]
+        },
+        {
+            "name": "oceania",
+            "subregions": [
+                "Choose subregion",
+                "Australia and New Zealand",
+                "Melanesia",
+                "Micronesia",
+                "Polynesia"
+            ]
+        }
+    ],
+};

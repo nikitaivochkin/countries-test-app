@@ -16,6 +16,8 @@ export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
 export const openElement = createAction('OPEN_ELEMENT');
 
+export const isExactSearch = createAction('ADD_EXACT_SEARCH');
+
 export const nextOrPrevElement = createAction('SWITCH_TO_NEXT_OR_PREV_ELEMENT');
 
 export const findElementBySelector = createAction('FIND_ELEMENT_BY_SELECTOR');
