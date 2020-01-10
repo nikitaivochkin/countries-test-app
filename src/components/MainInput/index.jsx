@@ -73,9 +73,11 @@ class MainInput extends React.Component {
             {isSelectorEqualRegion && text !== '' ? (
               <div className="search-bar-row row3">
                 <select onChange={this.handleAutocompliteBySelector('subregion')} className="search-bar-select" name="selector" component="select" required>
-                  {_.head(regionsAndSubregions[selector].filter((el) => el.name === text || el.subregions.some((e) => e === text))).subregions.map((e) => (
-                    <option key={_.uniqueId()} className="search-bar-option" value={e === 'Choose subregion' ? 'disabled' : e}>{e}</option>
-                  ))}
+                  {_.head(regionsAndSubregions[selector]
+                    .filter((el) => el.name === text || el.subregions.some((e) => e === text)))
+                    .subregions.map((e) => (
+                      <option key={_.uniqueId()} className="search-bar-option" value={e === 'Choose subregion' ? 'disabled' : e}>{e}</option>
+                    ))}
                 </select>
               </div>
             ) : null}
