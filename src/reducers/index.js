@@ -40,7 +40,6 @@ const elements = handleActions({
   },
   [actions.findElementBySelector](state, { payload: { inputValue, subSelector } }) {
     const { byId, selector, exactSearchStatus } = state;
-    console.log(inputValue, subSelector)
     const getAction = {
       yes: (element) => (element === inputValue || element === _.capitalize(inputValue)),
       no: (element) => (element.includes(inputValue) || element.includes(_.capitalize(inputValue))),
