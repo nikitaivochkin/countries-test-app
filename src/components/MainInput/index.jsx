@@ -23,24 +23,15 @@ const actionCreators = {
 };
 
 class MainInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { subSelector: '' };
-  }
-
   handleUpdateCurrentSelector = ({ target: { value } }) => {
     const { updateSelector } = this.props;
     updateSelector({ newSelector: value });
   }
 
-  handleUpdateSubSelector = ({ target: { value } }) => {
-    this.setState({ subSelector: value });
-  }
-
-  handleAutocompliteBySelector = ({ target: { value } }) => {
+  handleAutocompliteBySelector = (subSelector) => ({ target: { value } }) => {
     const { updateText, findElementBySelector } = this.props;
     updateText({ value });
-    findElementBySelector({ inputValue: value });
+    findElementBySelector({ inputValue: value, subSelector });
   }
 
   handleTurnOnExactSearch = () => {
@@ -49,14 +40,8 @@ class MainInput extends React.Component {
     isExactSearch({ status: exactSearchStatus });
   }
 
-  onChangeForSelect = (e) => {
-    this.handleAutocompliteBySelector(e);
-    this.handleUpdateSubSelector(e);
-  };
-
   render() {
     const { elements: { selector, exactSearchStatus }, text } = this.props;
-    const { subSelector } = this.state;
 
     const getOptionstDependsOnSelector = {
       region: regions.map(([v, t]) => (
@@ -67,7 +52,7 @@ class MainInput extends React.Component {
       )),
     };
 
-    const isSelectorEqualRegion = regionsAndSubregions[selector];
+    const isSelectorEqualRegion = selector === 'region';
 
     return (
       <div className="search-bar">
@@ -75,20 +60,20 @@ class MainInput extends React.Component {
           <div className="row">
             <div className="search-bar-row row1">
               {getOptionstDependsOnSelector[selector] ? null : (
-                <input onChange={this.handleAutocompliteBySelector} disabled={selector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
+                <input onChange={this.handleAutocompliteBySelector(selector)} disabled={selector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
               )}
             </div>
             {getOptionstDependsOnSelector[selector] ? (
               <div className="search-bar-row row3">
-                <select onChange={this.onChangeForSelect} className="search-bar-select" name="selector" component="select" required>
+                <select onChange={this.handleAutocompliteBySelector(selector)} className="search-bar-select" name="selector" component="select" required>
                   {getOptionstDependsOnSelector[selector]}
                 </select>
               </div>
             ) : null}
-            {isSelectorEqualRegion && subSelector !== '' ? (
+            {isSelectorEqualRegion && text !== '' ? (
               <div className="search-bar-row row3">
-                <select onChange={this.handleAutocompliteBySelector} className="search-bar-select" name="selector" component="select" required>
-                  {_.head(regionsAndSubregions[selector].filter(({ name }) => name === subSelector)).subregions.map((e) => (
+                <select onChange={this.handleAutocompliteBySelector('subregion')} className="search-bar-select" name="selector" component="select" required>
+                  {_.head(regionsAndSubregions[selector].filter((el) => el.name === text || el.subregions.some((e) => e === text))).subregions.map((e) => (
                     <option key={_.uniqueId()} className="search-bar-option" value={e === 'Choose subregion' ? 'disabled' : e}>{e}</option>
                   ))}
                 </select>

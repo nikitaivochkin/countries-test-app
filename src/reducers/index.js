@@ -38,20 +38,21 @@ const elements = handleActions({
       exactSearchStatus,
     };
   },
-  [actions.findElementBySelector](state, { payload: { inputValue } }) {
+  [actions.findElementBySelector](state, { payload: { inputValue, subSelector } }) {
     const { byId, selector, exactSearchStatus } = state;
+    console.log(inputValue, subSelector)
     const getAction = {
       yes: (element) => (element === inputValue || element === _.capitalize(inputValue)),
       no: (element) => (element.includes(inputValue) || element.includes(_.capitalize(inputValue))),
     };
     const mapped = _.pickBy(byId, (el) => {
-      if (selector === 'languages' || selector === 'regionalBlocs') {
-        return el[selector].map((e) => getAction[exactSearchStatus](e.name))
+      if (subSelector === 'languages' || subSelector === 'regionalBlocs') {
+        return el[subSelector].map((e) => getAction[exactSearchStatus](e.name))
           .some((e) => e === true);
-      } if (selector === 'callingCodes') {
-        return el[selector].some((e) => getAction[exactSearchStatus](e));
+      } if (subSelector === 'callingCodes') {
+        return el[subSelector].some((e) => getAction[exactSearchStatus](e));
       }
-      return getAction[exactSearchStatus](el[selector]);
+      return getAction[exactSearchStatus](el[subSelector]);
     });
     filtred = _.keys(mapped);
     return {

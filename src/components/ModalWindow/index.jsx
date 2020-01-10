@@ -107,7 +107,6 @@ class ModalWindow extends React.Component {
 
     render() {
       const { element, handleOpenElement } = this.props;
-      console.log(element)
       const { name, id } = element;
       const { uiState: { isOpenEl } } = this.props;
       const openElclassName = cn({
