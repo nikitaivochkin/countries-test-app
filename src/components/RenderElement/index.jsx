@@ -1,6 +1,6 @@
 import React from 'react';
-import ModalWindow from '../ModalWindow';
 import { connect } from 'react-redux';
+import ModalWindow from '../ModalWindow';
 import * as actions from '../../actions';
 import './main.sass';
 

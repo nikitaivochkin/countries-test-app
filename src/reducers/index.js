@@ -25,7 +25,7 @@ const text = handleActions({
   },
 }, '');
 
-let filtred;
+let filtredAllIds;
 
 const elements = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
@@ -44,7 +44,7 @@ const elements = handleActions({
       yes: (element) => (element === inputValue || element === _.capitalize(inputValue)),
       no: (element) => (element.includes(inputValue) || element.includes(_.capitalize(inputValue))),
     };
-    const mapped = _.pickBy(byId, (el) => {
+    const filtred = _.pickBy(byId, (el) => {
       if (subSelector === 'languages' || subSelector === 'regionalBlocs') {
         return el[subSelector].map((e) => getAction[exactSearchStatus](e.name))
           .some((e) => e === true);
@@ -53,10 +53,10 @@ const elements = handleActions({
       }
       return getAction[exactSearchStatus](el[subSelector]);
     });
-    filtred = _.keys(mapped);
+    filtredAllIds = _.keys(filtred);
     return {
       byId,
-      allIds: _.keys(mapped),
+      allIds: _.keys(filtred),
       selector,
       exactSearchStatus,
     };
@@ -103,7 +103,7 @@ const uiState = handleActions({
   },
   [actions.findElementBySelector](state) {
     const { currentSelecrot } = state;
-    const updated = _.pick(allUIStateData, filtred);
+    const updated = _.pick(allUIStateData, filtredAllIds);
     return {
       currentSelecrot,
       isOpenEl: updated,
