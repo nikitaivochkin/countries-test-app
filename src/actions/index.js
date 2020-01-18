@@ -14,6 +14,8 @@ export const updateText = createAction('UPDATE_TEXT');
 
 export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
+export const buildFilter = createAction('BUILD_FILTER');
+
 export const openElement = createAction('OPEN_ELEMENT');
 
 export const isExactSearch = createAction('ADD_EXACT_SEARCH');

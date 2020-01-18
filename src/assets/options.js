@@ -18,11 +18,15 @@ export const regionalBlocs = [['disabled', 'Make choose'],
     ['North American Free Trade Agreement', 'NAFTA (North American Free Trade Agreement)'],
     ['South Asian Association for Regional Cooperation', 'SAARC (South Asian Association for Regional Cooperation)']];
 
-export const regionsAndSubregions = {
-        region: [
-        {
+export const options = [
+    {
+        "selector": "region",
+        "name": "Africa",
+        "value": "africa",
+        "options": {
             "name": "africa",
-            "subregions": [
+            "selector": "subregion",
+            "options": [
                 "Choose subregion",
                 "Eastern Africa",
                 "Middle Africa",
@@ -31,9 +35,15 @@ export const regionsAndSubregions = {
                 "Western Africa"
             ]
         },
-        {
+    },
+    {
+        "selector": "region",
+        "name": "Americas",
+        "value": "americas",
+        "options": {
             "name": "americas",
-            "subregions": [
+            "selector": "subregion",
+            "options": [
                 "Choose subregion",
                 "Caribbean",
                 "Central America",
@@ -41,9 +51,15 @@ export const regionsAndSubregions = {
                 "Northern America"
             ]
         },
-        {
+    },
+    {
+        "selector": "region",
+        "name": "Asia",
+        "value": "asia",
+        "options": {
             "name": "asia",
-            "subregions": [
+            "selector": "subregion",
+            "options": [
                 "Choose subregion",
                 "Central Asia",
                 "Eastern Asia",
@@ -52,9 +68,15 @@ export const regionsAndSubregions = {
                 "Western Asia"
             ]
         },
-        {
+    },
+    {
+        "selector": "region",
+        "name": "Europe",
+        "value": "europe",
+        "options": {
             "name": "europe",
-            "subregions": [
+            "selector": "subregion",
+            "options": [
                 "Choose subregion",
                 "Eastern Europe",
                 "Northern Europe",
@@ -62,15 +84,87 @@ export const regionsAndSubregions = {
                 "Western Europe"
             ]
         },
-        {
+    },
+    {
+        "selector": "region",
+        "name": "Oceania",
+        "value": "oceania",
+        "options": {
             "name": "oceania",
-            "subregions": [
+            "selector": "subregion",
+            "options": [
                 "Choose subregion",
                 "Australia and New Zealand",
                 "Melanesia",
                 "Micronesia",
                 "Polynesia"
             ]
-        }
-    ],
-};
+        },
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "EU (European Union)",
+        "value": "European Union",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "EFTA (European Free Trade Association)",
+        "value": "European Free Trade Association",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "CARICOM (Caribbean Community)",
+        "value": "Caribbean Community",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "PA (Pacific Alliance)",
+        "value": "Pacific Alliance",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "USAN (Union of South American Nations)",
+        "value": "Union of South American Nations",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "EEU (Eurasian Economic Union)",
+        "value": "Eurasian Economic Union",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "AL (Arab League)",
+        "value": "Arab League",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "ASEAN (Association of Southeast Asian Nations)",
+        "value": "Association of Southeast Asian Nations",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "CEFTA (Central European Free Trade Agreement)",
+        "value": "Central European Free Trade Agreement",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "NAFTA (North American Free Trade Agreement)",
+        "value": "North American Free Trade Agreement",
+        "options": {},
+    },
+    {
+        "selector": "regionalBlocs",
+        "name": "SAARC (South Asian Association for Regional Cooperation)",
+        "value": "South Asian Association for Regional Cooperation",
+        "options": {},
+    },
+];

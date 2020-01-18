@@ -25,48 +25,79 @@ const text = handleActions({
   },
 }, '');
 
+let basicData;
+let filtredById;
 let filtredAllIds;
 
 const elements = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
-    const { selector, exactSearchStatus } = state;
+    const { filter, currentSelector, exactSearchStatus } = state;
     const allIdsElements = data.map((e) => e.id);
+    const mainData = _.mapKeys({ ...data }, (key) => key.id);
+    basicData = mainData;
     return {
-      byId: _.mapKeys({ ...data }, (key) => key.id),
+      byId: mainData,
       allIds: [...allIdsElements],
-      selector,
+      currentSelector,
+      filter,
       exactSearchStatus,
     };
   },
-  [actions.findElementBySelector](state, { payload: { inputValue, subSelector } }) {
-    const { byId, selector, exactSearchStatus } = state;
+  [actions.findElementBySelector](state) {
+    const { byId, filter, currentSelector, exactSearchStatus } = state;
+    filtredById = byId;
     const getAction = {
-      yes: (element) => (element === inputValue || element === _.capitalize(inputValue)),
-      no: (element) => (element.includes(inputValue) || element.includes(_.capitalize(inputValue))),
+      yes: (element, v) => (element === v || element === _.capitalize(v)),
+      no: (element, v) => (element.includes(v) || element.includes(_.capitalize(v))),
     };
-    const filtred = _.pickBy(byId, (el) => {
-      if (subSelector === 'languages' || subSelector === 'regionalBlocs') {
-        return el[subSelector].map((e) => getAction[exactSearchStatus](e.name))
-          .some((e) => e === true);
-      } if (subSelector === 'callingCodes') {
-        return el[subSelector].some((e) => getAction[exactSearchStatus](e));
-      }
-      return getAction[exactSearchStatus](el[subSelector]);
+    const result = filter.map((filterEl) => {
+      const [s,, v] = filterEl.split('_');
+      const filtred = _.pickBy(byId, (el) => {
+        if (s === 'languages' || s === 'regionalBlocs') {
+          return el[s].map((e) => getAction[exactSearchStatus](e.name, v))
+            .some((e) => e === true);
+        } if (s === 'callingCodes') {
+          return el[s].some((e) => getAction[exactSearchStatus](e, v));
+        }
+        return getAction[exactSearchStatus](el[s], v);
+      });
+      return filtred;
     });
-    filtredAllIds = _.keys(filtred);
+    filtredAllIds = _.keys(_.last(result));
     return {
       byId,
-      allIds: _.keys(filtred),
-      selector,
+      allIds: _.keys(_.last(result)),
+      currentSelector,
+      filter,
       exactSearchStatus,
     };
   },
   [actions.updateSelector](state, { payload: { newSelector } }) {
-    const { byId, allIds, exactSearchStatus } = state;
+    const { byId, allIds, filter, exactSearchStatus } = state;
     return {
       byId,
       allIds,
-      selector: newSelector,
+      currentSelector: newSelector,
+      filter,
+      exactSearchStatus,
+    };
+  },
+  [actions.buildFilter](state, { payload: { selector, value } }) {
+    const { byId, allIds, filter, currentSelector, exactSearchStatus } = state;
+    const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e) => {
+      const [s, lvl, v] = e.split('_');
+      const [selectorText] = selector.split('_');
+      if (s !== selectorText) {
+        return [...acc, `${selectorText}_${lvl}_${value}`];
+      } if (s === selectorText) {
+        return [...acc, `${s}_${lvl}_${value}`];
+      } return [...acc, `${s}_${lvl}_${v}`];
+    }, []);
+    return {
+      byId,
+      allIds,
+      currentSelector,
+      filter: updadedSelector,
       exactSearchStatus,
     };
   },
@@ -82,7 +113,8 @@ const elements = handleActions({
 }, {
   byId: {},
   allIds: [],
-  selector: 'disabled',
+  currentSelector: 'disabled_0',
+  filter: [],
   exactSearchStatus: 'no',
 });
 
