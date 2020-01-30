@@ -91,7 +91,7 @@ class MainInput extends React.Component {
         type: 'input',
         check: (s) => (s !== 'region' || s !== 'regionalBlocs'),
         action: (
-          <input onChange={this.handleAutocompliteBySelector(currentSelector)} disabled={currentSelector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
+          <input onChange={this.handleAutocompliteBySelector(currentSelector)} disabled={selector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
         ),
       },
     ];

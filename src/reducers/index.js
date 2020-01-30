@@ -86,23 +86,41 @@ const elements = handleActions({
     const {
       byId, allIds, filter, currentSelector, exactSearchStatus,
     } = state;
-    const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e) => {
+
+    const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e, index) => {
       const [s, lvl] = e.split('_');
       const [newS, newLvl] = selector.split('_');
-      if (newLvl < filter.length) {
-        return [`${newS}_${newLvl}_${value}`];
-      } if (s === newS) {
-        return [...acc, `${s}_${lvl}_${value}`];
-      } if (lvl !== newLvl) {
-        return [...acc, e, `${newS}_${newLvl}_${value}`];
-      }
-      return [...acc, e];
+      const typeActions = [
+        {
+          type: 'changeValue',
+          check: () => (s === newS),
+          action: () => [...acc, `${s}_${lvl}_${value}`],
+        },
+        {
+          type: 'changeSelector',
+          check: () => (lvl === newLvl),
+          action: () => [`${newS}_${newLvl}_${value}`],
+        },
+        {
+          type: 'remove',
+          check: () => (newLvl < filter.length - 1),
+          action: () => (newLvl < index ? acc : null),
+        },
+        {
+          type: 'add',
+          check: () => (newLvl >= filter.length - 1),
+          action: () => [...acc, e, `${newS}_${newLvl}_${value}`],
+        },
+      ];
+      const { action } = typeActions.find(({ check }) => check());
+      return action();
     }, []);
+    console.log(_.uniq(updadedSelector));
     return {
       byId,
       allIds,
       currentSelector,
-      filter: updadedSelector,
+      filter: _.uniq(updadedSelector),
       exactSearchStatus,
     };
   },
