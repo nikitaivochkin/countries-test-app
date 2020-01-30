@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import './main.sass';
-import { regions, regionalBlocs } from '../../assets/options.js';
+import { subregions, options } from '../../assets/options.js';
 
 const mapStateToPorps = (state) => {
   const props = {
@@ -24,8 +24,14 @@ const actionCreators = {
 };
 
 class MainInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { subSelector: null };
+  }
+
   handleUpdateCurrentSelector = (lvl) => ({ target: { value } }) => {
     const { updateSelector } = this.props;
+    this.setState({ subSelector: null });
     updateSelector({ newSelector: `${value}_${lvl}` });
   }
 
@@ -42,32 +48,65 @@ class MainInput extends React.Component {
     isExactSearch({ status: exactSearchStatus });
   }
 
+  hadleUpdateSubselector = (e) => {
+    this.setState({ subSelector: e.target.value });
+  }
+
   render() {
     const { elements: { currentSelector, exactSearchStatus }, text } = this.props;
+    const { subSelector } = this.state;
 
-    const getOptionstDependsOnSelector = {
-      region: regions.map(([v, t]) => (
-        <option key={_.uniqueId()} className="search-bar-option" value={v}>{t}</option>
-      )),
-      regionalBlocs: regionalBlocs.map(([v, t]) => (
-        <option key={_.uniqueId()} className="search-bar-option" value={v}>{t}</option>
-      )),
-    };
     const [selector] = currentSelector.split('_');
+    const getFilterForSetect = () => (
+      <div className="search-bar-row row3">
+        <select
+          onChange={(e) => {
+            this.handleAutocompliteBySelector(currentSelector)(e);
+            this.hadleUpdateSubselector(e);
+          }}
+          className="search-bar-select"
+          name="selector"
+          component="select"
+          required
+        >
+          {options.filter(({ s }) => s === selector).map(({ n, v }) => (
+            <option key={_.uniqueId()} className="search-bar-option" value={v}>{n}</option>
+          ))}
+        </select>
+        {subregions[subSelector] ? (
+          <select onChange={this.handleAutocompliteBySelector('subregion_1')} className="search-bar-select" name="selector" component="select" required>
+            {subregions[subSelector].map((el) => (<option key={_.uniqueId()} className="search-bar-option" value={el}>{el}</option>))}
+          </select>
+        ) : null}
+      </div>
+    );
+
+    const getAction = [
+      {
+        type: 'select',
+        check: (s) => (s === 'region' || s === 'regionalBlocs'),
+        action: getFilterForSetect(),
+      },
+      {
+        type: 'input',
+        check: (s) => (s !== 'region' || s !== 'regionalBlocs'),
+        action: (
+          <input onChange={this.handleAutocompliteBySelector(currentSelector)} disabled={currentSelector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
+        ),
+      },
+    ];
+
+    const getFilter = (s) => {
+      const { action } = getAction.find((({ check }) => check(s)));
+      return action;
+    };
+
     return (
       <div className="search-bar">
         <form className="serch-bar-form">
           <div className="row">
             <div className="search-bar-row row1">
-              {getOptionstDependsOnSelector[selector] ? (
-                <div className="search-bar-row row3">
-                  <select onChange={this.handleAutocompliteBySelector(currentSelector)} className="search-bar-select" name="selector" component="select" required>
-                    {getOptionstDependsOnSelector[selector]}
-                  </select>
-                </div>
-              ) : (
-                <input onChange={this.handleAutocompliteBySelector(currentSelector)} disabled={currentSelector === 'disabled'} value={text} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
-              )}
+              {getFilter(selector)}
             </div>
             <div className="search-bar-row row2">
               <select onChange={this.handleUpdateCurrentSelector(0)} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
@@ -80,24 +119,21 @@ class MainInput extends React.Component {
                 <option className="search-bar-option" value="regionalBlocs">Regional Blocs</option>
               </select>
             </div>
-            {selector === 'disabled' ? null : (
-              <div className="search-bar-check">
-                <label className="search-bar-check-label" htmlFor="rules">
-                  <input
-                    onChange={this.handleTurnOnExactSearch}
-                    checked={exactSearchStatus === 'yes'}
-                    id="rules"
-                    type="checkbox"
-                    className="search-bar-check-input"
-                    disabled={getOptionstDependsOnSelector[currentSelector]}
-                  />
+            <div className="search-bar-check">
+              <label className="search-bar-check-label" htmlFor="rules">
+                <input
+                  onChange={this.handleTurnOnExactSearch}
+                  checked={exactSearchStatus === 'yes'}
+                  id="rules"
+                  type="checkbox"
+                  className="search-bar-check-input"
+                />
                   Exact search
-                </label>
-              </div>
-            )}
+              </label>
+            </div>
           </div>
         </form>
-        {getOptionstDependsOnSelector[selector] ? (
+        {selector === 'region' || selector === 'regionalBlocs' ? (
           <h2 className="search-bar-title">{_.toUpper(text)}</h2>
         ) : null }
       </div>

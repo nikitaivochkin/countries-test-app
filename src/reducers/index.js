@@ -25,8 +25,6 @@ const text = handleActions({
   },
 }, '');
 
-let basicData;
-let filtredById;
 let filtredAllIds;
 
 const elements = handleActions({
@@ -34,7 +32,6 @@ const elements = handleActions({
     const { filter, currentSelector, exactSearchStatus } = state;
     const allIdsElements = data.map((e) => e.id);
     const mainData = _.mapKeys({ ...data }, (key) => key.id);
-    basicData = mainData;
     return {
       byId: mainData,
       allIds: [...allIdsElements],
@@ -44,8 +41,9 @@ const elements = handleActions({
     };
   },
   [actions.findElementBySelector](state) {
-    const { byId, filter, currentSelector, exactSearchStatus } = state;
-    filtredById = byId;
+    const {
+      byId, filter, currentSelector, exactSearchStatus,
+    } = state;
     const getAction = {
       yes: (element, v) => (element === v || element === _.capitalize(v)),
       no: (element, v) => (element.includes(v) || element.includes(_.capitalize(v))),
@@ -73,7 +71,9 @@ const elements = handleActions({
     };
   },
   [actions.updateSelector](state, { payload: { newSelector } }) {
-    const { byId, allIds, filter, exactSearchStatus } = state;
+    const {
+      byId, allIds, filter, exactSearchStatus,
+    } = state;
     return {
       byId,
       allIds,
@@ -83,15 +83,20 @@ const elements = handleActions({
     };
   },
   [actions.buildFilter](state, { payload: { selector, value } }) {
-    const { byId, allIds, filter, currentSelector, exactSearchStatus } = state;
+    const {
+      byId, allIds, filter, currentSelector, exactSearchStatus,
+    } = state;
     const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e) => {
-      const [s, lvl, v] = e.split('_');
-      const [selectorText] = selector.split('_');
-      if (s !== selectorText) {
-        return [...acc, `${selectorText}_${lvl}_${value}`];
-      } if (s === selectorText) {
+      const [s, lvl] = e.split('_');
+      const [newS, newLvl] = selector.split('_');
+      if (newLvl < filter.length) {
+        return [`${newS}_${newLvl}_${value}`];
+      } if (s === newS) {
         return [...acc, `${s}_${lvl}_${value}`];
-      } return [...acc, `${s}_${lvl}_${v}`];
+      } if (lvl !== newLvl) {
+        return [...acc, e, `${newS}_${newLvl}_${value}`];
+      }
+      return [...acc, e];
     }, []);
     return {
       byId,
@@ -102,11 +107,14 @@ const elements = handleActions({
     };
   },
   [actions.isExactSearch](state, { payload: { status } }) {
-    const { byId, allIds, selector } = state;
+    const {
+      byId, allIds, currentSelector, filter,
+    } = state;
     return {
       byId,
       allIds,
-      selector,
+      currentSelector,
+      filter,
       exactSearchStatus: status === 'no' ? 'yes' : 'no',
     };
   },

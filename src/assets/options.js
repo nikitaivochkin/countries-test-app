@@ -4,167 +4,135 @@ export const regions = [['disabled', 'Choose region'],
     ['europe', 'Europe'],
     ['oceania', 'Oceania']];
 
-export const regionalBlocs = [['disabled', 'Make choose'],
-    ['European Union', 'EU (European Union)'],
-    ['European Free Trade Association', 'EFTA (European Free Trade Association)'],
-    ['Caribbean Community', 'CARICOM (Caribbean Community)'],
-    ['Pacific Alliance', 'PA (Pacific Alliance)'],
-    ['African Union', 'AU (African Union)'],
-    ['Union of South American Nations', 'USAN (Union of South American Nations)'],
-    ['Eurasian Economic Union', 'EEU (Eurasian Economic Union)'],
-    ['Arab League', 'AL (Arab League)'],
-    ['Association of Southeast Asian Nations', 'ASEAN (Association of Southeast Asian Nations)'],
-    ['Central European Free Trade Agreement', 'CEFTA (Central European Free Trade Agreement)'],
-    ['North American Free Trade Agreement', 'NAFTA (North American Free Trade Agreement)'],
-    ['South Asian Association for Regional Cooperation', 'SAARC (South Asian Association for Regional Cooperation)']];
+export const subregions = {
+    'africa': [
+        "Choose subregion",
+        "Eastern Africa",
+        "Middle Africa",
+        "Northern Africa",
+        "Southern Africa",
+        "Western Africa"
+    ],
+    'americas': [
+        "Choose subregion",
+        "Caribbean",
+        "Central America",
+        "South America",
+        "Northern America"
+    ],
+    'asia': [
+        "Choose subregion",
+        "Central Asia",
+        "Eastern Asia",
+        "Southern Asia",
+        "South-Eastern Asia",
+        "Western Asia"
+    ],
+    'europe': [
+        "Choose subregion",
+        "Eastern Europe",
+        "Northern Europe",
+        "Southern Europe",
+        "Western Europe"
+    ],
+    'oceania': [
+        "Choose subregion",
+        "Australia and New Zealand",
+        "Melanesia",
+        "Micronesia",
+        "Polynesia"
+    ],
+};
 
 export const options = [
     {
-        "selector": "region",
-        "name": "Africa",
-        "value": "africa",
-        "options": {
-            "name": "africa",
-            "selector": "subregion",
-            "options": [
-                "Choose subregion",
-                "Eastern Africa",
-                "Middle Africa",
-                "Northern Africa",
-                "Southern Africa",
-                "Western Africa"
-            ]
-        },
+        "s": "region",
+        "n": "Make choose",
+        "v": "disabled",
     },
     {
-        "selector": "region",
-        "name": "Americas",
-        "value": "americas",
-        "options": {
-            "name": "americas",
-            "selector": "subregion",
-            "options": [
-                "Choose subregion",
-                "Caribbean",
-                "Central America",
-                "South America",
-                "Northern America"
-            ]
-        },
+        "s": "region",
+        "n": "Africa",
+        "v": "africa",
     },
     {
-        "selector": "region",
-        "name": "Asia",
-        "value": "asia",
-        "options": {
-            "name": "asia",
-            "selector": "subregion",
-            "options": [
-                "Choose subregion",
-                "Central Asia",
-                "Eastern Asia",
-                "Southern Asia",
-                "South-Eastern Asia",
-                "Western Asia"
-            ]
-        },
+        "s": "region",
+        "n": "Americas",
+        "v": "americas",
     },
     {
-        "selector": "region",
-        "name": "Europe",
-        "value": "europe",
-        "options": {
-            "name": "europe",
-            "selector": "subregion",
-            "options": [
-                "Choose subregion",
-                "Eastern Europe",
-                "Northern Europe",
-                "Southern Europe",
-                "Western Europe"
-            ]
-        },
+        "s": "region",
+        "n": "Asia",
+        "v": "asia",
     },
     {
-        "selector": "region",
-        "name": "Oceania",
-        "value": "oceania",
-        "options": {
-            "name": "oceania",
-            "selector": "subregion",
-            "options": [
-                "Choose subregion",
-                "Australia and New Zealand",
-                "Melanesia",
-                "Micronesia",
-                "Polynesia"
-            ]
-        },
+        "s": "region",
+        "n": "Europe",
+        "v": "europe",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "EU (European Union)",
-        "value": "European Union",
-        "options": {},
+        "s": "region",
+        "n": "Oceania",
+        "v": "oceania",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "EFTA (European Free Trade Association)",
-        "value": "European Free Trade Association",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "Make choose",
+        "v": "disabled",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "CARICOM (Caribbean Community)",
-        "value": "Caribbean Community",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "EU (European Union)",
+        "v": "European Union",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "PA (Pacific Alliance)",
-        "value": "Pacific Alliance",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "EFTA (European Free Trade Association)",
+        "v": "European Free Trade Association",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "USAN (Union of South American Nations)",
-        "value": "Union of South American Nations",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "CARICOM (Caribbean Community)",
+        "v": "Caribbean Community",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "EEU (Eurasian Economic Union)",
-        "value": "Eurasian Economic Union",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "PA (Pacific Alliance)",
+        "v": "Pacific Alliance",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "AL (Arab League)",
-        "value": "Arab League",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "USAN (Union of South American Nations)",
+        "v": "Union of South American Nations",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "ASEAN (Association of Southeast Asian Nations)",
-        "value": "Association of Southeast Asian Nations",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "EEU (Eurasian Economic Union)",
+        "v": "Eurasian Economic Union",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "CEFTA (Central European Free Trade Agreement)",
-        "value": "Central European Free Trade Agreement",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "AL (Arab League)",
+        "v": "Arab League",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "NAFTA (North American Free Trade Agreement)",
-        "value": "North American Free Trade Agreement",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "ASEAN (Association of Southeast Asian Nations)",
+        "v": "Association of Southeast Asian Nations",
     },
     {
-        "selector": "regionalBlocs",
-        "name": "SAARC (South Asian Association for Regional Cooperation)",
-        "value": "South Asian Association for Regional Cooperation",
-        "options": {},
+        "s": "regionalBlocs",
+        "n": "CEFTA (Central European Free Trade Agreement)",
+        "v": "Central European Free Trade Agreement",
+    },
+    {
+        "s": "regionalBlocs",
+        "n": "NAFTA (North American Free Trade Agreement)",
+        "v": "North American Free Trade Agreement",
+    },
+    {
+        "s": "regionalBlocs",
+        "n": "SAARC (South Asian Association for Regional Cooperation)",
+        "v": "South Asian Association for Regional Cooperation",
     },
 ];

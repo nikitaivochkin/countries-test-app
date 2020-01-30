@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
