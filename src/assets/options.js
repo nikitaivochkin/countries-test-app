@@ -1,3 +1,11 @@
+export const mainSelect = [['Make choose', 'disabled'],
+    ['Country', 'name'],
+    ['Capital', 'capital'],
+    ['Languge', 'languages'],
+    ['Calling codes', 'callingCodes'],
+    ['Region', 'region'],
+    ['Regional Blocs', 'regionalBlocs']];
+
 export const regions = [['disabled', 'Choose region'],
     ['africa', 'Africa'],
     ['americas', 'Americas'],

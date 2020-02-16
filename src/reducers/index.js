@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
+import { mainSelect } from '../assets/options.js';
 
 const elementsFetchState = handleActions({
   [actions.fetchElementsRequest]() {
@@ -44,27 +45,55 @@ const elements = handleActions({
     const {
       byId, filter, currentSelector, exactSearchStatus,
     } = state;
+
     const getAction = {
       yes: (element, v) => (element === v || element === _.capitalize(v)),
       no: (element, v) => (element.includes(v) || element.includes(_.capitalize(v))),
     };
-    const result = filter.map((filterEl) => {
-      const [s,, v] = filterEl.split('_');
-      const filtred = _.pickBy(byId, (el) => {
-        if (s === 'languages' || s === 'regionalBlocs') {
-          return el[s].map((e) => getAction[exactSearchStatus](e.name, v))
-            .some((e) => e === true);
-        } if (s === 'callingCodes') {
-          return el[s].some((e) => getAction[exactSearchStatus](e, v));
-        }
-        return getAction[exactSearchStatus](el[s], v);
+    
+    let countries = byId;
+
+    _.mapKeys(filter, (v, s) => {
+      const filtred = _.pickBy(countries, (el) => {
+        const actionsDopendsOnSelector = [
+          {
+            name: 'languagesOrRegionalBlocs',
+            check: (selector) => (selector === 'languages' || selector === 'regionalBlocs'),
+            action: () => el[s].map((e) => getAction[exactSearchStatus](e.name, v))
+              .some((e) => e === true),
+          },
+          {
+            name: 'callingCodes',
+            check: (selector) => (selector === 'callingCodes'),
+            action: () => el[s].some((e) => getAction[exactSearchStatus](e, v)),
+          },
+          {
+            name: 'populationMin',
+            check: (selector) => (selector === 'populationMin'),
+            action: () => (el.population >= v * 1000000),
+          },
+          {
+            name: 'populationMax',
+            check: (selector) => (selector === 'populationMax'),
+            action: () => (el.population <= v * 1000000),
+          },
+          {
+            name: 'other',
+            check: (selector) => selector,
+            action: () => getAction[exactSearchStatus](el[s], v),
+          },
+        ];
+        const { action } = actionsDopendsOnSelector.find(({ check }) => check(s));
+        return action();
       });
+      countries = filtred;
       return filtred;
     });
-    filtredAllIds = _.keys(_.last(result));
+
+    filtredAllIds = _.keys(countries);
     return {
       byId,
-      allIds: _.keys(_.last(result)),
+      allIds: _.keys(countries),
       currentSelector,
       filter,
       exactSearchStatus,
@@ -87,40 +116,42 @@ const elements = handleActions({
       byId, allIds, filter, currentSelector, exactSearchStatus,
     } = state;
 
-    const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e, index) => {
-      const [s, lvl] = e.split('_');
-      const [newS, newLvl] = selector.split('_');
-      const typeActions = [
-        {
-          type: 'changeValue',
-          check: () => (s === newS),
-          action: () => [...acc, `${s}_${lvl}_${value}`],
+    const typeActions = [
+      {
+        type: 'rmSubregion',
+        check: () => (selector === 'region' && filter['subregion'] && filter['region'] !== value),
+        action: () => _.omit(filter, "subregion"),
+      },
+      {
+        type: 'add',
+        check: () => (!filter[selector]),
+        action: () => {
+          if (_.keys(filter).length === 0 || !mainSelect.some(([, v]) => v === selector)) {
+            return _.set(filter, `${selector}`, value)
+          }
+          const updated = _.mapKeys(filter, ((_v, k) => mainSelect.some(([, v]) => v === k) ? selector : k));
+          const rmSubregion = _.omit(updated, "subregion");
+          return _.set(rmSubregion, `${selector}`, value);
         },
-        {
-          type: 'changeSelector',
-          check: () => (lvl === newLvl),
-          action: () => [`${newS}_${newLvl}_${value}`],
-        },
-        {
-          type: 'remove',
-          check: () => (newLvl < filter.length - 1),
-          action: () => (newLvl < index ? acc : null),
-        },
-        {
-          type: 'add',
-          check: () => (newLvl >= filter.length - 1),
-          action: () => [...acc, e, `${newS}_${newLvl}_${value}`],
-        },
-      ];
-      const { action } = typeActions.find(({ check }) => check());
-      return action();
-    }, []);
-    console.log(_.uniq(updadedSelector));
+      },
+      {
+        type: 'emptyValue',
+        check: () => (value.length === 0),
+        action: () => _.omit(filter, `${selector}`),
+      },
+      {
+        type: 'changeValue',
+        check: () => (filter[selector]),
+        action: () => _.set(filter, `${selector}`, value),
+      },
+    ];
+    const { action } = typeActions.find(({ check }) => check());
+
     return {
       byId,
       allIds,
       currentSelector,
-      filter: _.uniq(updadedSelector),
+      filter: action(),
       exactSearchStatus,
     };
   },
@@ -140,7 +171,7 @@ const elements = handleActions({
   byId: {},
   allIds: [],
   currentSelector: 'disabled_0',
-  filter: [],
+  filter: {},
   exactSearchStatus: 'no',
 });
 
@@ -199,3 +230,55 @@ export default combineReducers({
   uiState,
   form: formReducer,
 });
+
+
+
+// [actions.buildFilter](state, { payload: { selector, value } }) {
+//   const {
+//     byId, allIds, filter, currentSelector, exactSearchStatus,
+//   } = state;
+
+//   const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e, index) => {
+//     const [s, lvl] = e.split('_');
+//     const [newS, newLvl] = selector.split('_');
+
+//     const typeActions = [
+//       {
+//         type: 'emptyValue',
+//         check: () => (value.length === 0),
+//         action: () => console.log(acc),
+//       },
+//       {
+//         type: 'changeValue',
+//         check: () => (s === newS),
+//         action: () => [...acc, `${s}_${lvl}_${value}`],
+//       },
+//       {
+//         type: 'changeSelector',
+//         check: () => ((lvl === newLvl) && (s === newS)),
+//         action: () => [`${newS}_${newLvl}_${value}`],
+//       },
+//       {
+//         type: 'remove',
+//         check: () => (newLvl < filter.length - 1),
+//         action: () => (newLvl < index ? acc : null),
+//       },
+//       {
+//         type: 'add',
+//         check: () => (s !== newS),
+//         action: () => [...acc, e, `${newS}_${newLvl}_${value}`],
+//       },
+//     ];
+//     const { type, action } = typeActions.find(({ check }) => check());
+//     console.log(type);
+//     return action();
+//   }, []);
+
+//   return {
+//     byId,
+//     allIds,
+//     currentSelector,
+//     filter: _.uniq(updadedSelector),
+//     exactSearchStatus,
+//   };
+// },

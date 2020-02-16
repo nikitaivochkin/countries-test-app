@@ -5,15 +5,14 @@ import RenderElement from '../RenderElement';
 import './main.sass';
 
 const mapStateToPorps = (state) => {
-  const { searchFetchingState, elements: { byId, allIds }, uiState } = state;
-  const { currentSelector } = uiState;
-  const elements = allIds.map((id) => byId[id]);
-  return { searchFetchingState, elements, currentSelector };
+  const { searchFetchingState, elements: { byId, allIds, filter } } = state;
+  const mappedElements = allIds.map((id) => byId[id]);
+  return { searchFetchingState, mappedElements, filter };
 };
 
 class ReceivedData extends React.Component {
   render() {
-    const { searchFetchingState, elements } = this.props;
+    const { searchFetchingState, mappedElements, filter } = this.props;
 
     if (searchFetchingState === 'requested') {
       return (
@@ -30,10 +29,10 @@ class ReceivedData extends React.Component {
         </div>
       );
     }
-
-    return elements.length > 0 && (
+    
+    return _.keys(filter).length > 0 && (
       <div className="result">
-        {elements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
+        {mappedElements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
       </div>
     );
   }
