@@ -1,10 +1,11 @@
 /* eslint-disable react/prefer-stateless-function */
-import _ from 'lodash';
+import { uniqueId } from 'lodash';
+import cn from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import { regions, regionalBlocs, subregions } from '../../assets/options.js';
 import './main.sass';
-import { mainSelect, subregions, options } from '../../assets/options.js';
 
 const mapStateToPorps = (state) => {
   const props = {
@@ -17,133 +18,162 @@ const mapStateToPorps = (state) => {
 
 const actionCreators = {
   updateText: actions.updateText,
-  updateSelector: actions.updateSelector,
   buildFilter: actions.buildFilter,
   findElementBySelector: actions.findElementBySelector,
-  isExactSearch: actions.isExactSearch,
 };
 
 class MainInput extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { subSelector: null, additionalFilter: 'hide', };
+    this.state = { filterStatus: 'hide', };
   }
 
-  handleUpdateCurrentSelector = ({ target: { value } }) => {
-    const { updateSelector } = this.props;
-    this.setState({ subSelector: null });
-    updateSelector({ newSelector: value });
-  }
-
-  handleAutocompliteBySelector = (selector) => ({ target: { value } }) => {
+  handleAutocomplite = (selector) => ({ target: { value } }) => {
     const { updateText, buildFilter, findElementBySelector } = this.props;
     updateText({ value });
     buildFilter({ selector, value });
     findElementBySelector();
   }
 
-  handleTurnOnExactSearch = () => {
-    const { elements: { exactSearchStatus } } = this.props;
-    const { isExactSearch } = this.props;
-    isExactSearch({ status: exactSearchStatus });
-  }
-
-  hadleUpdateSubselector = (e) => {
-    this.setState({ subSelector: e.target.value });
+  handleShowHideAllFilters = () => {
+    const { filterStatus } = this.state;
+    this.setState({ filterStatus: filterStatus === 'hide' ? 'show' : 'hide' });
   }
 
   render() {
-    const { elements: { currentSelector, exactSearchStatus }, text } = this.props;
-    const { subSelector } = this.state;
+    const { text, elements: { filter } } = this.props;
+    const { filterStatus } = this.state;
 
-    const [selector] = currentSelector.split('_');
-    const getFilterForSetect = () => (
-      <div className="search-bar-row row3">
-        <select
-          onChange={(e) => {
-            this.handleAutocompliteBySelector(currentSelector)(e);
-            this.hadleUpdateSubselector(e);
-          }}
-          className="search-bar-select"
-          name="selector"
-          component="select"
-          required
-          placeholder="Enter some text"
-        >
-          {options.filter(({ s }) => s === selector).map(({ n, v }) => (
-            <option key={_.uniqueId()} className="search-bar-option" value={v}>{n}</option>
-          ))}
-        </select>
-        {subregions[subSelector] ? (
-          <select onChange={this.handleAutocompliteBySelector('subregion')} className="search-bar-select" name="selector" component="select" required>
-            {subregions[subSelector].map((el) => (<option key={_.uniqueId()} className="search-bar-option" value={el}>{el}</option>))}
-          </select>
-        ) : null}
-      </div>
-    );
-
-    const getAction = [
-      {
-        type: 'select',
-        check: (s) => (s === 'region' || s === 'regionalBlocs'),
-        action: getFilterForSetect(),
-      },
-      {
-        type: 'input',
-        check: (s) => (s !== 'region' || s !== 'regionalBlocs'),
-        action: (
-          <input onChange={this.handleAutocompliteBySelector(currentSelector)} disabled={selector === 'disabled'} className="search-bar-input" name="text" component="input" required type="text" placeholder="Enter some text" />
-        ),
-      },
-    ];
-
-    const getFilters = () => {
-      const { action } = getAction.find((({ check }) => check(selector)));
-      return action;
-    };
+    const filtersClassName = cn({
+      'serch-bar__filters': true,
+      [filterStatus]: true,
+    });
 
     return (
       <div className="search-bar">
-        <form className="serch-bar-form main">
-          <div className="row">
-            <div className="search-bar-row row1">
-              {getFilters()}
+        <div className="serch-bar__main">
+            <input
+              onChange={this.handleAutocomplite('name')}
+              className="serch-bar__filters__input serch-bar__filters__input-name"
+              name="text"
+              component="input"
+              required type="text"
+              placeholder="Enter country name"
+            />
+        </div>
+        <div onClick={this.handleShowHideAllFilters} className="open-filters">
+          {
+            filterStatus === 'hide' ? 
+              (<a className="open-filters__link">&darr; Show all filters &darr;</a>) :
+              (<a className="open-filters__link">&uarr; Hide all filters &uarr;</a>)
+          }
+        </div>
+        <div className={filtersClassName}>
+          <div className="serch-bar__inputs">
+            <div className="serch-bar__filters__input">
+              <input 
+                onChange={this.handleAutocomplite('capital')}
+                className="serch-bar__filters__input serch-bar__filters__input-capital" 
+                name="text" 
+                component="input"
+                required type="text"
+                placeholder="Enter capital name"
+              />
             </div>
-            <div className="search-bar-row row2">
-              <select onChange={this.handleUpdateCurrentSelector} className="search-bar-select" name="selector" component="select" required placeholder="Enter some text">
-                {mainSelect.map(([t, v]) => <option key={_.uniqueId()} className="search-bar-option" value={v}>{t}</option>)}
+            <div className="serch-bar__filters__input">
+              <input
+                onChange={this.handleAutocomplite('languages')}
+                className="serch-bar__filters__input serch-bar__filters__input-languages"
+                name="text"
+                component="input"
+                required type="text"
+                placeholder="Enter language name"
+              />
+            </div>
+            <div className="serch-bar__filters__input">
+              <input
+                onChange={this.handleAutocomplite('callingCodes')}
+                className="serch-bar__filters__input serch-bar__filters__input-languages"
+                name="text"
+                component="input"
+                required type="text"
+                placeholder="Enter calling code"
+              />
+            </div>
+          </div>
+          <div className="serch-bar__selectors">
+            <div className="serch-bar__filters__select">
+              <select
+                onChange={this.handleAutocomplite('region')}
+                className="serch-bar__filters__select serch-bar__filters__select-region"
+                name="region"
+                component="select"
+                value={text}
+                required
+                placeholder="Choose region"  
+              >
+                {
+                  regions.map(([value, name]) => (
+                    <option key={uniqueId()} className="select-option" value={value}>{name}</option>
+                  ))
+                }
               </select>
             </div>
-            <div className="search-bar-check">
-              <label className="search-bar-check-label" htmlFor="rules">
-                <input
-                  onChange={this.handleTurnOnExactSearch}
-                  checked={exactSearchStatus === 'yes'}
-                  id="rules"
-                  type="checkbox"
-                  className="search-bar-check-input"
-                />
-                  Exact search
-              </label>
+            <div className="serch-bar__filters__select">
+              <select
+                onChange={this.handleAutocomplite('subregion')}
+                className="serch-bar__filters__select serch-bar__filters__select-subregion"
+                name="subregion"
+                component="select"
+                value={text}
+                disabled={!filter['region']}
+                required
+                placeholder="Choose subregion"  
+              >
+                {
+                  filter['region'] ? subregions[filter['region']].map((name) => (
+                    <option key={uniqueId()} className="select-option" value={name}>{name}</option>
+                  )) : null
+                }
+              </select>
+            </div>
+            <div className="serch-bar__filters__select">
+              <select
+                onChange={this.handleAutocomplite('regionalBlocs')}
+                className="serch-bar__filters__select serch-bar__filters__select-region"
+                name="regionalBlocs"
+                component="select"
+                value={text}
+                required
+                placeholder="Choose regional bloc"  
+              >
+                {
+                  regionalBlocs.map(([value, name]) => (
+                    <option key={uniqueId()} className="select-option" value={value}>{name}</option>
+                  ))
+                }
+              </select>
             </div>
           </div>
-        </form>
-        <form className="serch-bar-form-population">
-          <div>
-            <label>Population min</label>
-            <input onChange={this.handleAutocompliteBySelector('populationMin')} className="search-bar-input" name="PopulationMin" component="input" required placeholder="Enter some num" />
-          </div>
-          <div>
-            <label>Population max</label>
-            <input onChange={this.handleAutocompliteBySelector('populationMax')} className="search-bar-input" name="PopulationMax" component="input" required placeholder="Enter some num" />
-          </div>
-        </form>
-        {(selector === 'region' || selector === 'regionalBlocs') ? (
-          <h2 className="search-bar-title">{_.toUpper(text)}</h2>
-        ) : null }
+        </div>
       </div>
     );
   }
 }
 
 export default connect(mapStateToPorps, actionCreators)(MainInput);
+
+
+{/* <form className="serch-bar-form-population">
+<div>
+  <label>Population min</label>
+  <input onChange={this.handleAutocompliteBySelector('populationMin')} className="search-bar-input" name="PopulationMin" component="input" required placeholder="Enter some num" />
+</div>
+<div>
+  <label>Population max</label>
+  <input onChange={this.handleAutocompliteBySelector('populationMax')} className="search-bar-input" name="PopulationMax" component="input" required placeholder="Enter some num" />
+</div>
+</form>
+{(selector === 'region' || selector === 'regionalBlocs') ? (
+<h2 className="search-bar-title">{_.toUpper(text)}</h2>
+) : null } */}

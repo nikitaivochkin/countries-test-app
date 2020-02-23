@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
-import { mainSelect } from '../assets/options.js';
 
 const elementsFetchState = handleActions({
   [actions.fetchElementsRequest]() {
@@ -19,10 +18,7 @@ const elementsFetchState = handleActions({
 
 const text = handleActions({
   [actions.updateText](_state, { payload: { value } }) {
-    return value;
-  },
-  [actions.updateSelector]() {
-    return '';
+    return value !== 'reset' ?  value : '';
   },
 }, '');
 
@@ -30,27 +26,14 @@ let filtredAllIds;
 
 const elements = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
-    const { filter, currentSelector, exactSearchStatus } = state;
+    const { filter } = state;
     const allIdsElements = data.map((e) => e.id);
     const mainData = _.mapKeys({ ...data }, (key) => key.id);
-    return {
-      byId: mainData,
-      allIds: [...allIdsElements],
-      currentSelector,
-      filter,
-      exactSearchStatus,
-    };
+
+    return { byId: mainData, allIds: [...allIdsElements], filter };
   },
   [actions.findElementBySelector](state) {
-    const {
-      byId, filter, currentSelector, exactSearchStatus,
-    } = state;
-
-    const getAction = {
-      yes: (element, v) => (element === v || element === _.capitalize(v)),
-      no: (element, v) => (element.includes(v) || element.includes(_.capitalize(v))),
-    };
-    
+    const { byId, filter } = state;
     let countries = byId;
 
     _.mapKeys(filter, (v, s) => {
@@ -59,13 +42,13 @@ const elements = handleActions({
           {
             name: 'languagesOrRegionalBlocs',
             check: (selector) => (selector === 'languages' || selector === 'regionalBlocs'),
-            action: () => el[s].map((e) => getAction[exactSearchStatus](e.name, v))
-              .some((e) => e === true),
+            action: () => el[s].map((e) => (e.name.includes(v) || e.name.includes(_.capitalize(v))))
+              .some((e) => e === true)
           },
           {
             name: 'callingCodes',
             check: (selector) => (selector === 'callingCodes'),
-            action: () => el[s].some((e) => getAction[exactSearchStatus](e, v)),
+            action: () => el[s].some((e) => (e === v || e === _.capitalize(v))),
           },
           {
             name: 'populationMin',
@@ -80,7 +63,7 @@ const elements = handleActions({
           {
             name: 'other',
             check: (selector) => selector,
-            action: () => getAction[exactSearchStatus](el[s], v),
+            action: () => (el[s].includes(v) || el[s].includes(_.capitalize(v))),
           },
         ];
         const { action } = actionsDopendsOnSelector.find(({ check }) => check(s));
@@ -91,52 +74,30 @@ const elements = handleActions({
     });
 
     filtredAllIds = _.keys(countries);
-    return {
-      byId,
-      allIds: _.keys(countries),
-      currentSelector,
-      filter,
-      exactSearchStatus,
-    };
-  },
-  [actions.updateSelector](state, { payload: { newSelector } }) {
-    const {
-      byId, allIds, filter, exactSearchStatus,
-    } = state;
-    return {
-      byId,
-      allIds,
-      currentSelector: newSelector,
-      filter,
-      exactSearchStatus,
-    };
+
+    return { byId, allIds: _.keys(countries), filter };
   },
   [actions.buildFilter](state, { payload: { selector, value } }) {
-    const {
-      byId, allIds, filter, currentSelector, exactSearchStatus,
-    } = state;
+    const { byId, allIds, filter } = state;
 
+    if (value === 'disabled') {
+      return { byId, allIds, filter: _.omit(filter, `${selector}`) };
+    }
+    
     const typeActions = [
       {
         type: 'rmSubregion',
-        check: () => (selector === 'region' && filter['subregion'] && filter['region'] !== value),
-        action: () => _.omit(filter, "subregion"),
+        check: () => (value === 'reset' && filter['region'] && filter['subregion']),
+        action: () => _.omit(filter, ['region' ,'subregion']),
       },
       {
         type: 'add',
         check: () => (!filter[selector]),
-        action: () => {
-          if (_.keys(filter).length === 0 || !mainSelect.some(([, v]) => v === selector)) {
-            return _.set(filter, `${selector}`, value)
-          }
-          const updated = _.mapKeys(filter, ((_v, k) => mainSelect.some(([, v]) => v === k) ? selector : k));
-          const rmSubregion = _.omit(updated, "subregion");
-          return _.set(rmSubregion, `${selector}`, value);
-        },
+        action: () => _.set(filter, `${selector}`, value),
       },
       {
         type: 'emptyValue',
-        check: () => (value.length === 0),
+        check: () => (value.length === 0 || value === 'reset'),
         action: () => _.omit(filter, `${selector}`),
       },
       {
@@ -146,34 +107,10 @@ const elements = handleActions({
       },
     ];
     const { action } = typeActions.find(({ check }) => check());
-
-    return {
-      byId,
-      allIds,
-      currentSelector,
-      filter: action(),
-      exactSearchStatus,
-    };
+    const updatedFilter = action();
+    return { byId, allIds, filter: updatedFilter };
   },
-  [actions.isExactSearch](state, { payload: { status } }) {
-    const {
-      byId, allIds, currentSelector, filter,
-    } = state;
-    return {
-      byId,
-      allIds,
-      currentSelector,
-      filter,
-      exactSearchStatus: status === 'no' ? 'yes' : 'no',
-    };
-  },
-}, {
-  byId: {},
-  allIds: [],
-  currentSelector: 'disabled_0',
-  filter: {},
-  exactSearchStatus: 'no',
-});
+}, { byId: {}, allIds: [], filter: {} });
 
 let allUIStateData;
 
@@ -231,54 +168,3 @@ export default combineReducers({
   form: formReducer,
 });
 
-
-
-// [actions.buildFilter](state, { payload: { selector, value } }) {
-//   const {
-//     byId, allIds, filter, currentSelector, exactSearchStatus,
-//   } = state;
-
-//   const updadedSelector = filter.length === 0 ? [`${selector}_${value}`] : filter.reduce((acc, e, index) => {
-//     const [s, lvl] = e.split('_');
-//     const [newS, newLvl] = selector.split('_');
-
-//     const typeActions = [
-//       {
-//         type: 'emptyValue',
-//         check: () => (value.length === 0),
-//         action: () => console.log(acc),
-//       },
-//       {
-//         type: 'changeValue',
-//         check: () => (s === newS),
-//         action: () => [...acc, `${s}_${lvl}_${value}`],
-//       },
-//       {
-//         type: 'changeSelector',
-//         check: () => ((lvl === newLvl) && (s === newS)),
-//         action: () => [`${newS}_${newLvl}_${value}`],
-//       },
-//       {
-//         type: 'remove',
-//         check: () => (newLvl < filter.length - 1),
-//         action: () => (newLvl < index ? acc : null),
-//       },
-//       {
-//         type: 'add',
-//         check: () => (s !== newS),
-//         action: () => [...acc, e, `${newS}_${newLvl}_${value}`],
-//       },
-//     ];
-//     const { type, action } = typeActions.find(({ check }) => check());
-//     console.log(type);
-//     return action();
-//   }, []);
-
-//   return {
-//     byId,
-//     allIds,
-//     currentSelector,
-//     filter: _.uniq(updadedSelector),
-//     exactSearchStatus,
-//   };
-// },

@@ -1,24 +1,12 @@
 import _ from 'lodash';
 import axios from 'axios';
 import { createAction } from 'redux-actions';
-// import routes from '../routes';
-
-// const getCurrentRoute = {
-//   Country: 'getCountries',
-//   Capital: 'getCapitalSities',
-//   Region: 'getRegion',
-//   Languge: 'getLanguge',
-// };
 
 export const updateText = createAction('UPDATE_TEXT');
-
-export const updateSelector = createAction('UPDATE_CURRENT_SELECTOR');
 
 export const buildFilter = createAction('BUILD_FILTER');
 
 export const openElement = createAction('OPEN_ELEMENT');
-
-export const isExactSearch = createAction('ADD_EXACT_SEARCH');
 
 export const nextOrPrevElement = createAction('SWITCH_TO_NEXT_OR_PREV_ELEMENT');
 
