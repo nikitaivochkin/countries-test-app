@@ -10,7 +10,8 @@ export const regions = [['disabled', 'Choose region'],
     ['africa', 'Africa'],
     ['americas', 'Americas'],
     ['europe', 'Europe'],
-    ['oceania', 'Oceania']];
+    ['oceania', 'Oceania'],
+    ['reset', 'Reset']];
 
 export const subregions = {
     'africa': [
@@ -52,95 +53,19 @@ export const subregions = {
     ],
 };
 
-export const options = [
-    {
-        "s": "region",
-        "n": "Make choose",
-        "v": "disabled",
-    },
-    {
-        "s": "region",
-        "n": "Africa",
-        "v": "africa",
-    },
-    {
-        "s": "region",
-        "n": "Americas",
-        "v": "americas",
-    },
-    {
-        "s": "region",
-        "n": "Asia",
-        "v": "asia",
-    },
-    {
-        "s": "region",
-        "n": "Europe",
-        "v": "europe",
-    },
-    {
-        "s": "region",
-        "n": "Oceania",
-        "v": "oceania",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "Make choose",
-        "v": "disabled",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "EU (European Union)",
-        "v": "European Union",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "EFTA (European Free Trade Association)",
-        "v": "European Free Trade Association",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "CARICOM (Caribbean Community)",
-        "v": "Caribbean Community",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "PA (Pacific Alliance)",
-        "v": "Pacific Alliance",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "USAN (Union of South American Nations)",
-        "v": "Union of South American Nations",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "EEU (Eurasian Economic Union)",
-        "v": "Eurasian Economic Union",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "AL (Arab League)",
-        "v": "Arab League",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "ASEAN (Association of Southeast Asian Nations)",
-        "v": "Association of Southeast Asian Nations",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "CEFTA (Central European Free Trade Agreement)",
-        "v": "Central European Free Trade Agreement",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "NAFTA (North American Free Trade Agreement)",
-        "v": "North American Free Trade Agreement",
-    },
-    {
-        "s": "regionalBlocs",
-        "n": "SAARC (South Asian Association for Regional Cooperation)",
-        "v": "South Asian Association for Regional Cooperation",
-    },
+export const regionalBlocs = [
+    ['disabled', 'Choose regional bloc'],
+    ['European Union', 'EU (European Union)'],
+    ['European Free Trade Association', 'EFTA (European Free Trade Association)'],
+    ['Caribbean Community', 'CARICOM (Caribbean Community)'],
+    ['Pacific Alliance', 'PA (Pacific Alliance)'],
+    ['Union of South American Nations', 'USAN (Union of South American Nations)'],
+    ['Eurasian Economic Union', 'EEU (Eurasian Economic Union)'],
+    ['Arab League', 'AL (Arab League)'],
+    ['Association of Southeast Asian Nations', 'SEAN (Association of Southeast Asian Nations)'],
+    ['Central European Free Trade Agreement', 'CEFTA (Central European Free Trade Agreement)'],
+    ['North American Free Trade Agreement', 'NAFTA (North American Free Trade Agreement)'],
+    ['South Asian Association for Regional Cooperation', 'SAARC (South Asian Association for Regional Cooperation)'],
+    ['reset', 'Reset'],
 ];
+
