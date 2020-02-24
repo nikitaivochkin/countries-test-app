@@ -10,7 +10,7 @@ const mapStateToPorps = (state) => {
   return { searchFetchingState, mappedElements, filter };
 };
 
-class ReceivedData extends React.Component {
+class ReceivedData extends React.PureComponent {
   render() {
     const { searchFetchingState, mappedElements, filter } = this.props;
 
