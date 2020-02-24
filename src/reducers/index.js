@@ -18,7 +18,7 @@ const elementsFetchState = handleActions({
 
 const text = handleActions({
   [actions.updateText](_state, { payload: { value } }) {
-    return value !== 'reset' ?  value : '';
+    return value !== 'reset' ? value : '';
   },
 }, '');
 
@@ -43,7 +43,7 @@ const elements = handleActions({
             name: 'languagesOrRegionalBlocs',
             check: (selector) => (selector === 'languages' || selector === 'regionalBlocs'),
             action: () => el[s].map((e) => (e.name.includes(v) || e.name.includes(_.capitalize(v))))
-              .some((e) => e === true)
+              .some((e) => e === true),
           },
           {
             name: 'callingCodes',
@@ -83,12 +83,11 @@ const elements = handleActions({
     if (value === 'disabled') {
       return { byId, allIds, filter: _.omit(filter, `${selector}`) };
     }
-    
     const typeActions = [
       {
         type: 'rmSubregion',
-        check: () => (value === 'reset' && filter['region'] && filter['subregion']),
-        action: () => _.omit(filter, ['region' ,'subregion']),
+        check: () => (value === 'reset' && filter.region && filter.subregion && (selector === 'region' || selector === 'subregion')),
+        action: () => _.omit(filter, ['region', 'subregion']),
       },
       {
         type: 'add',
@@ -167,4 +166,3 @@ export default combineReducers({
   uiState,
   form: formReducer,
 });
-

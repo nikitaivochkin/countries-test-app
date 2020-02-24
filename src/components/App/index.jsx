@@ -8,4 +8,5 @@ const App = () => (
     <ReceivedData />
   </>
 );
+
 export default App;

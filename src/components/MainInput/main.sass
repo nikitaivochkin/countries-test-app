@@ -1,7 +1,5 @@
 body
-    padding: 30px
-    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)
-    box-sizing: border-box
+    background-color: aliceblue
 
 .root
     display: flex
@@ -18,33 +16,41 @@ body
     align-items: center
 
 .serch-bar__main
+    width: 100%
     margin-bottom: 3vh
-    z-index: 10
+    text-align: center
 
 .serch-bar__filters
     display: flex
     width: 100%
     justify-content: space-evenly
     z-index: 0
-
 .hide
     display: none
-
 .show
     display: flex
 
+.serch-bar__filters__input-name
+    width: 49%
+
+.serch-bar__inputs, .serch-bar__selects,
+    width: 49%
+
 .serch-bar__filters__input, .serch-bar__filters__select
-    width: 100%
+    width: 70%
+    text-align: center
     margin: 0 auto
     margin-bottom: 1vh
     font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif
     font-size: 18px
     color: #60666d
 
+.population
+    display: flex
+    width: 57%
+
 .open-filters
     margin-bottom: 3vh
-    position: relative
-    z-index: 10
 
 .open-filters__link
     cursor: pointer

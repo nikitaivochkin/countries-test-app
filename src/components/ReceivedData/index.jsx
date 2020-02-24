@@ -29,7 +29,7 @@ class ReceivedData extends React.Component {
         </div>
       );
     }
-    
+
     return _.keys(filter).length > 0 && (
       <div className="result">
         {mappedElements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}

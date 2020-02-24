@@ -1,10 +1,11 @@
-export const mainSelect = [['Make choose', 'disabled'],
-    ['Country', 'name'],
-    ['Capital', 'capital'],
-    ['Languge', 'languages'],
-    ['Calling codes', 'callingCodes'],
-    ['Region', 'region'],
-    ['Regional Blocs', 'regionalBlocs']];
+export const inputs = [['capital', 'Enter capital name', 1],
+    ['languages', 'Enter language name', 2],
+    ['callingCodes', 'Enter calling code', 3],
+    ['population', 'Enter num', 4]];
+
+export const selects = [['region', 'Choose region'],
+    ['subregion', 'Choose subregion'],
+    ['regionalBlocs', 'Choose regional bloc']];
 
 export const regions = [['disabled', 'Choose region'],
     ['africa', 'Africa'],
