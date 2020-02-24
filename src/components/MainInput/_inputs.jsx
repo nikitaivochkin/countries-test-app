@@ -13,7 +13,7 @@ export default class Inputs extends React.Component {
           name={name}
           component="input"
           required
-          type={name !== 'callingCodes' ? 'text' : 'number'}
+          type={(name !== 'callingCodes' || name !== 'numericCode') ? 'text' : 'number'}
           placeholder={placeholder}
         />
       </div>

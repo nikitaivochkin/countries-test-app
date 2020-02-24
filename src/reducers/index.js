@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
+// import data from '../../src/assets/alpha3Code.json';
 
 const elementsFetchState = handleActions({
   [actions.fetchElementsRequest]() {
@@ -49,6 +50,11 @@ const elements = handleActions({
             name: 'callingCodesOrTimezones',
             check: (selector) => (selector === 'callingCodes' || selector === 'timezones'),
             action: () => el[s].some((e) => (e === v || e === _.capitalize(v))),
+          },
+          {
+            name: 'apha2OrAlpha3OrCountryCode',
+            check: (selector) => (selector === 'alpha2Code' || selector === 'alpha3Code' || selector === 'numericCode'),
+            action: () => (el[s] === v || el[s] === _.capitalize(v) || el[s] === _.upperCase(v)),
           },
           {
             name: 'populationMin',

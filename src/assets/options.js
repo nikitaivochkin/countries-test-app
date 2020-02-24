@@ -1,7 +1,10 @@
 export const inputs = [['capital', 'Enter capital name', 1],
     ['languages', 'Enter language name', 2],
     ['callingCodes', 'Enter calling code', 3],
-    ['population', 'Enter num', 4]];
+    ['alpha2Code', 'Enter alpha-2-Code', 4],
+    ['alpha3Code', 'Enter alpha-3-Code', 5],
+    ['numericCode', 'Enter country code', 6],
+    ['population', 'Enter num', 7]];
 
 export const selects = [['region', 'Choose region'],
     ['subregion', 'Choose subregion'],
