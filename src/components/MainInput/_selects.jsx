@@ -1,7 +1,7 @@
 import { uniqueId } from 'lodash';
 import React from 'react';
 import {
-  selects, regions, regionalBlocs, subregions,
+  selects, regions, regionalBlocs, subregions, timeZones,
 } from '../../assets/options.js';
 
 export default class Selects extends React.Component {
@@ -12,6 +12,7 @@ export default class Selects extends React.Component {
       region: regions,
       subregion: subregions,
       regionalBlocs,
+      timezones: timeZones,
     };
 
     const getOptions = (name) => {

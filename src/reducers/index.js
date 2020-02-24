@@ -46,8 +46,8 @@ const elements = handleActions({
               .some((e) => e === true),
           },
           {
-            name: 'callingCodes',
-            check: (selector) => (selector === 'callingCodes'),
+            name: 'callingCodesOrTimezones',
+            check: (selector) => (selector === 'callingCodes' || selector === 'timezones'),
             action: () => el[s].some((e) => (e === v || e === _.capitalize(v))),
           },
           {
