@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
-// import data from '../../src/assets/alpha3Code.json';
 
 const elementsFetchState = handleActions({
   [actions.fetchElementsRequest]() {
@@ -57,14 +56,26 @@ const elements = handleActions({
             action: () => (el[s] === v || el[s] === _.capitalize(v) || el[s] === _.upperCase(v)),
           },
           {
-            name: 'populationMin',
-            check: (selector) => (selector === 'populationMin'),
-            action: () => (el.population >= v * 1000000),
+            name: 'Min',
+            check: (selector) => (selector === 'populationMin' || selector === 'areaMin'),
+            action: () => {
+              if (s === 'populationMin') {
+                return el.population >= v * 1000000;
+              } if (s === 'areaMin') {
+                return el.area >= v;
+              }
+            },
           },
           {
-            name: 'populationMax',
-            check: (selector) => (selector === 'populationMax'),
-            action: () => (el.population <= v * 1000000),
+            name: 'Max',
+            check: (selector) => (selector === 'populationMax' || selector === 'areaMax'),
+            action: () => {
+              if (s === 'populationMax') {
+                return el.population <= v * 1000000;
+              } if (s === 'areaMax') {
+                return el.area <= v;
+              }
+            },
           },
           {
             name: 'other',
@@ -91,9 +102,14 @@ const elements = handleActions({
     }
     const typeActions = [
       {
-        type: 'rmSubregion',
-        check: () => (value === 'reset' && filter.region && filter.subregion && (selector === 'region' || selector === 'subregion')),
+        type: 'resetRegion',
+        check: () => (value === 'reset' && filter.region && filter.subregion && selector === 'region'),
         action: () => _.omit(filter, ['region', 'subregion']),
+      },
+      {
+        type: 'resetSubregion',
+        check: () => (value === 'reset' && filter.subregion && selector === 'subregion'),
+        action: () => _.omit(filter, 'subregion'),
       },
       {
         type: 'add',
@@ -108,7 +124,13 @@ const elements = handleActions({
       {
         type: 'changeValue',
         check: () => (filter[selector]),
-        action: () => _.set(filter, `${selector}`, value),
+        action: () => {
+          if (filter.subregion) {
+            const withoutSubregion = _.omit(filter, 'subregion');
+            return _.set(withoutSubregion, `${selector}`, value);
+          }
+          return _.set(filter, `${selector}`, value);
+        },
       },
     ];
     const { action } = typeActions.find(({ check }) => check());

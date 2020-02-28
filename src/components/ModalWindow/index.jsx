@@ -6,6 +6,7 @@ import cn from 'classnames';
 import ArrowKeysReact from 'arrow-keys-react';
 import * as actions from '../../actions';
 import './main.sass';
+import data from '../../assets/alpha3Code.json';
 
 const mapStateToPorps = (state) => {
   const props = {
@@ -65,7 +66,9 @@ class ModalWindow extends React.Component {
             return (
               <div className="body-content-element">
                 <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
-                <span>{_.join(value, ', ')}</span>
+                <span>
+                  {key !== 'borders' ? _.join(value, ', ') : _.join(value.map((alpha3) => data.find((obj) => obj['alpha-3'] === alpha3).name), ', ')}
+                </span>
               </div>
             );
           },

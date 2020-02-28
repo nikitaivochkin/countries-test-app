@@ -4,7 +4,8 @@ export const inputs = [['capital', 'Enter capital name', 1],
     ['alpha2Code', 'Enter alpha-2-Code', 4],
     ['alpha3Code', 'Enter alpha-3-Code', 5],
     ['numericCode', 'Enter country code', 6],
-    ['population', 'Enter num', 7]];
+    ['population', 'Enter num', 7],
+    ['area', 'Enter num', 8]];
 
 export const selects = [['region', 'Choose region'],
     ['subregion', 'Choose subregion'],
@@ -25,14 +26,16 @@ export const subregions = {
         "Middle Africa",
         "Northern Africa",
         "Southern Africa",
-        "Western Africa"
+        "Western Africa",
+        "reset",
     ],
     'americas': [
         "Choose subregion",
         "Caribbean",
         "Central America",
         "South America",
-        "Northern America"
+        "Northern America",
+        "reset",
     ],
     'asia': [
         "Choose subregion",
@@ -40,21 +43,24 @@ export const subregions = {
         "Eastern Asia",
         "Southern Asia",
         "South-Eastern Asia",
-        "Western Asia"
+        "Western Asia",
+        "reset",
     ],
     'europe': [
         "Choose subregion",
         "Eastern Europe",
         "Northern Europe",
         "Southern Europe",
-        "Western Europe"
+        "Western Europe",
+        "reset",
     ],
     'oceania': [
         "Choose subregion",
         "Australia and New Zealand",
         "Melanesia",
         "Micronesia",
-        "Polynesia"
+        "Polynesia",
+        "reset",
     ],
 };
 
