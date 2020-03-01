@@ -1,43 +1,54 @@
 body
     background-color: aliceblue
+    margin: 0 auto
 
 .root
     display: flex
     min-height: inherit
-    flex-direction: column
+    flex-direction: row
+    width: inherit
     
 .search-bar
     display: flex
-    width: inherit
-    justify-content: center
+    width: 100%
     margin-top: 5vh
     margin-bottom: 5vh
     flex-direction: column
     align-items: center
 
-.serch-bar__main
+.search-bar input
     width: 100%
+
+.serch-bar__main
+    width: 80%
     margin-bottom: 3vh
     text-align: center
 
 .serch-bar__filters
+    position: relative
     display: flex
-    width: 100%
-    justify-content: space-evenly
-    z-index: 0
-.hide
-    display: none
+    flex-direction: column-reverse
+    align-items: center
+    justify-content: center
+    margin-left: -330px
+    top: 0%
+    width: 380px
+    min-height: 100vh
+    z-index: 1
+    background-color: rgba(114, 160, 193, .4)
+    transition: 1s
+
 .show
-    display: flex
+    margin-left: 0px
 
-.serch-bar__filters__input-name
-    width: 49%
-
-.serch-bar__inputs, .serch-bar__selects,
-    width: 49%
+.serch-bar__filters-body
+    position: fixed
+    top: 0
+    padding-top: 10px
+    width: inherit
+    height: 100vh
 
 .serch-bar__filters__input, .serch-bar__filters__select
-    width: 70%
     text-align: center
     margin: 0 auto
     margin-bottom: 1vh
@@ -47,15 +58,18 @@ body
 
 .serch-bar__filters__select
     cursor: pointer
+    width: 80%
 
-.population, .area
-    width: 57%
+.population input, .area input
+    width: 80%
 
 .inputs, .inputs__input
     display: flex
+    justify-content: center
 
 .inputs__input
     flex-direction: column
+    width: 35%
 
 .input-name
     margin: 0
@@ -65,7 +79,11 @@ body
     font-size: 10px
 
 .open-filters
-    margin-bottom: 3vh
+    top: 50%
+    right: -40px
+    position: absolute
+    transform: translateY(-50%) rotateZ(-90deg)
+    background-color: rgba(51, 170, 51, 0)
 
 .open-filters__link
     cursor: pointer

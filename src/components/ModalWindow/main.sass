@@ -16,7 +16,9 @@
 
 .render-element-full-show.open
     position: fixed
-    background-color: rgba(0, 0, 0, 0.4)
+    z-index: 0
+    outline: none
+    // background-color: rgba(0, 0, 0, 0.4)
     max-height: -webkit-fill-available
 
 .render-element-modal-content
@@ -25,7 +27,7 @@
     background-clip: padding-box
     border: 1px solid rgba(0, 0, 0, 0.2)
     border-radius: 0.3rem
-    outline: 0
+    outline: none
     max-width: 60% 
 
 .modal-title
@@ -71,9 +73,10 @@
     align-items: flex-start
     justify-content: space-between
     padding: 1rem
-    border-top: 1px solid #e9ecef
-    border-top-left-radius: 0.3rem
-    border-top-right-radius: 0.3rem
+    position: fixed
+    top: 50%
+    transform: translateY(-50%)
+    width: 50%
 
 .footer-button-block
     display: flex
