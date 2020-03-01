@@ -151,8 +151,26 @@ class ModalWindow extends React.Component {
             </div>
             <div className="modal-footer">
               <div className="footer-button-block">
-                <button href="#" onClick={this.handleSwitchToNextElement(id, 'prev')} type="button" className="footer-button-prev">Prev</button>
-                <button href="#" onClick={this.handleSwitchToNextElement(id, 'next')} type="button" className="footer-button-next">Next</button>
+                <span
+                  onClick={this.handleSwitchToNextElement(id, 'prev')}
+                  onKeyDown={() => {}}
+                  role="button"
+                  tabIndex={0}
+                  type="button"
+                  className="footer-button-prev"
+                >
+                  &lt;
+                </span>
+                <span
+                  onClick={this.handleSwitchToNextElement(id, 'next')}
+                  onKeyDown={() => {}}
+                  role="button"
+                  tabIndex={0}
+                  type="button"
+                  className="footer-button-next"
+                >
+                  &gt;
+                </span>
               </div>
             </div>
           </div>

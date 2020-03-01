@@ -21,10 +21,14 @@ export default class Inputs extends React.Component {
     ) : (
       <div key={`input-${key}`} className={`serch-bar__filters__input ${name}`}>
         <p className="input-name">{`${_.upperFirst(name)}`}</p>
-        <p className="input-dimension">({name === 'population' ? 'Millions people' : 'Square kilometers'})</p>
+        <p className="input-dimension">
+          (
+          {name === 'population' ? 'Millions people' : 'Square kilometers'}
+          )
+        </p>
         <div className="inputs">
           <div className="inputs__input">
-            <label>{`min`}</label>
+            <span>min</span>
             <input
               onChange={handleAutocomplite(`${name}Min`)}
               className={`serch-bar__filters__input serch-bar__filters__input-${name}`}
@@ -36,7 +40,7 @@ export default class Inputs extends React.Component {
             />
           </div>
           <div className="inputs__input">
-            <label>{`max`}</label>
+            <span>max</span>
             <input
               onChange={handleAutocomplite(`${name}Max`)}
               className={`serch-bar__filters__input serch-bar__filters__input-${name}`}

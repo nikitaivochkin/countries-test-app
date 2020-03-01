@@ -61,9 +61,7 @@ const elements = handleActions({
             action: () => {
               if (s === 'populationMin') {
                 return el.population >= v * 1000000;
-              } if (s === 'areaMin') {
-                return el.area >= v;
-              }
+              } return el.area >= v;
             },
           },
           {
@@ -72,9 +70,7 @@ const elements = handleActions({
             action: () => {
               if (s === 'populationMax') {
                 return el.population <= v * 1000000;
-              } if (s === 'areaMax') {
-                return el.area <= v;
-              }
+              } return el.area <= v;
             },
           },
           {

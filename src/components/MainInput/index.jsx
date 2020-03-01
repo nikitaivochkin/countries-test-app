@@ -62,11 +62,11 @@ class MainInput extends React.Component {
                     : (<span className="open-filters__link">&uarr; Hide all filters &uarr;</span>)
                 }
             </div>
-            <div className="serch-bar__inputs">
-              <Inputs handleAutocomplite={this.handleAutocomplite} />
-            </div>
             <div className="serch-bar__selects">
               <Selects text={text} filter={filter} handleAutocomplite={this.handleAutocomplite} />
+            </div>
+            <div className="serch-bar__inputs">
+              <Inputs handleAutocomplite={this.handleAutocomplite} />
             </div>
           </div>
         </div>
