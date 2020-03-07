@@ -22,8 +22,6 @@ const text = handleActions({
   },
 }, '');
 
-let filtredAllIds;
-
 const elements = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
     const { filter } = state;
@@ -85,16 +83,15 @@ const elements = handleActions({
       countries = filtred;
       return filtred;
     });
-
-    filtredAllIds = _.keys(countries);
-
     return { byId, allIds: _.keys(countries), filter };
   },
-  [actions.buildFilter](state, { payload: { selector, value } }) {
+  [actions.buildFilter](state, { payload: { selector, value, resetFilter = false } }) {
     const { byId, allIds, filter } = state;
 
     if (value === 'disabled') {
       return { byId, allIds, filter: _.omit(filter, `${selector}`) };
+    } if (resetFilter) {
+      return { byId, allIds, filter: { [selector]: value } };
     }
     const typeActions = [
       {
@@ -135,8 +132,6 @@ const elements = handleActions({
   },
 }, { byId: {}, allIds: [], filter: {} });
 
-let allUIStateData;
-
 const uiState = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
     const { currentSelecrot } = state;
@@ -144,18 +139,9 @@ const uiState = handleActions({
       const setOpenStatus = _.set(e, 'status', 'close');
       return _.pick(setOpenStatus, ['id', 'status']);
     });
-    allUIStateData = _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id);
     return {
       currentSelecrot,
       isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
-    };
-  },
-  [actions.findElementBySelector](state) {
-    const { currentSelecrot } = state;
-    const updated = _.pick(allUIStateData, filtredAllIds);
-    return {
-      currentSelecrot,
-      isOpenEl: updated,
     };
   },
   [actions.openElement](state, { payload: { isOpenEl: { id } } }) {

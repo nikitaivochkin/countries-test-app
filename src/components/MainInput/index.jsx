@@ -80,6 +80,7 @@ class MainInput extends React.Component {
               required
               type="text"
               placeholder="Enter country name"
+              value={filter.name ? filter.name : text}
             />
           </div>
           <ReceivedData />

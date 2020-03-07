@@ -10,13 +10,19 @@ import data from '../../assets/alpha3Code.json';
 
 const mapStateToPorps = (state) => {
   const props = {
+    text: state.text,
+    elements: state.elements,
     uiState: state.uiState,
   };
   return props;
 };
 
 const actionCreators = {
+  openElement: actions.openElement,
   nextOrPrevElement: actions.nextOrPrevElement,
+  updateText: actions.updateText,
+  buildFilter: actions.buildFilter,
+  findElementBySelector: actions.findElementBySelector,
 };
 
 class ModalWindow extends React.Component {
@@ -29,8 +35,27 @@ class ModalWindow extends React.Component {
       nextOrPrevElement({ isOpenEl: { id, type } });
     }
 
+    handleOpenElement = (id) => (e) => {
+      e.stopPropagation();
+      const { openElement } = this.props;
+      openElement({ isOpenEl: { id } });
+    }
+
+    handleAutocomplite = (selector) => ({ target: { textContent } }) => {
+      const { updateText, buildFilter, findElementBySelector } = this.props;
+      updateText({ value: textContent });
+      buildFilter({ selector, value: textContent, resetFilter: true });
+      findElementBySelector();
+    };
+
     mappedBodyContent(el, margin = 0) {
+      const { elements: { byId } } = this.props;
+
       const getNormalizedString = (str) => _.capitalize(_.lowerCase(str));
+
+      const getCountryName = (alpha3) => data.find((obj) => obj['alpha-3'] === alpha3).name;
+      const getCountryId = (countryName) => _.findKey(byId, ({ name }) => name === countryName);
+
       const getAction = [
         {
           type: 'null',
@@ -66,9 +91,30 @@ class ModalWindow extends React.Component {
             return (
               <div className="body-content-element">
                 <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
-                <span>
-                  {key !== 'borders' ? _.join(value, ', ') : _.join(value.map((alpha3) => data.find((obj) => obj['alpha-3'] === alpha3).name), ', ')}
-                </span>
+                {key !== 'borders' ? (
+                  <span>{_.join(value, ', ')}</span>
+                ) : (
+                  <div className="body-content-element-borders">
+                    {value.map((alpha3) => (
+                      <span
+                        key={_.uniqueId()}
+                        className="body-content-element-borders-link"
+                        href="#"
+                        onClick={(e) => {
+                          this.handleAutocomplite('name')(e);
+                          this.handleOpenElement(el.id)(e);
+                          this.handleOpenElement(getCountryId(getCountryName(alpha3)))(e);
+                        }}
+                        onKeyDown={() => {}}
+                        role="button"
+                        tabIndex={0}
+                        value={getCountryName(alpha3)}
+                      >
+                        {getCountryName(alpha3)}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           },
