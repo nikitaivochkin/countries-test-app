@@ -7,3 +7,4 @@ node_js:
 script:
   - make lint
   - make test
+  - make test-coverage
