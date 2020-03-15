@@ -1,4 +1,4 @@
-.render-element-full-show
+.render-element__full-show
     position: fixed
     margin: auto
     top: 0
@@ -10,18 +10,18 @@
     height: 100%
     overflow: auto
 
-.render-element-full-show.close
+.render-element__full-show.close
     position: fixed
     display: none
 
-.render-element-full-show.open
+.render-element__full-show.open
     position: fixed
     z-index: 0
     outline: none
     // background-color: rgba(0, 0, 0, 0.4)
     max-height: -webkit-fill-available
 
-.render-element-modal-content
+.render-element__modal-content
     margin: auto
     background-color: #fff
     background-clip: padding-box
@@ -30,7 +30,7 @@
     outline: none
     max-width: 60% 
 
-.modal-title
+.modal-content__modal-title
     display: flex
     -webkit-box-align: start
     align-items: flex-start
@@ -40,35 +40,35 @@
     border-top-left-radius: 0.3rem
     border-top-right-radius: 0.3rem
 
-.modal-title-text
+.modal-content__modal-title-text
     font-size: 1.25rem
     margin-bottom: 0
     line-height: 1.5
     margin-top: 0
 
-.modal-title-close
+.modal-content__modal-title-close
     color: #d8d8d8
     float: right
     font-size: 28px
     font-weight: bold
     cursor: pointer
 
-.modal-body
+.render-element__modal-body
     display: block
     margin-bottom: 7vh
 
-.body-content
+.modal-body__body-content
     margin-left: 10% 
 
-.body-content-element
+.modal-body__body-content__body-content-element
     display: flex
     flex-direction: column
 
-.body-content-element-borders
+.modal-body__body-content__body-content-element-borders
     display: flex
     flex-direction: column
 
-.body-content-element-borders-link
+.modal-body__body-content__body-content-element-borders-link
     position: relative
     margin-left: 1vw
     margin-top: 1vw
@@ -77,11 +77,11 @@
     text-decoration: underline
     z-index: 1
 
-.body-content-element-title
+.modal-body__body-content__body-content-element-title
     margin-right: 10%
     margin-bottom: 0
 
-.modal-footer
+.render-element__modal-footer
     -webkit-box-align: start
     align-items: flex-start
     justify-content: space-between
@@ -90,12 +90,12 @@
     transform: translateX(-7%) translateY(-50%)
     width: 70%
 
-.footer-button-block
+.modal-footer__footer-button-block
     display: flex
     position: relative
     z-index: 0
     justify-content: space-between
 
-.footer-button-prev, .footer-button-next
+.modal-footer__footer-button-prev, .modal-footer__footer-button-next
     cursor: pointer
     font-size: 50px

@@ -31,7 +31,7 @@ class ReceivedData extends React.PureComponent {
     }
 
     return _.keys(filter).length > 0 && (
-      <div className="result">
+      <div className="result" data-testid="result">
         {mappedElements.map((e) => <RenderElement key={_.uniqueId()} element={e} />)}
       </div>
     );

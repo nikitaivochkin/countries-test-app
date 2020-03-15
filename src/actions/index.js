@@ -22,6 +22,7 @@ export const fetchElements = () => async (dispatch) => {
   try {
     const url = 'https://restcountries.eu/rest/v2/all';
     const responce = await axios.get(url);
+    console.log(responce.data);
     const setIdToData = responce.data.map((e) => _.set(e, 'id', _.uniqueId()));
     dispatch(fetchElementsSuccess({ data: setIdToData }));
   } catch (e) {

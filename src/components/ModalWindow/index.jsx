@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import cn from 'classnames';
 import ArrowKeysReact from 'arrow-keys-react';
 import * as actions from '../../actions';
-import './main.sass';
 import data from '../../assets/alpha3Code.json';
+import './main.sass';
 
 const mapStateToPorps = (state) => {
   const props = {
@@ -66,8 +66,8 @@ class ModalWindow extends React.Component {
           type: 'stringOrNumber',
           check: (value) => (typeof value === 'string' || typeof value === 'number'),
           action: (key, value) => (
-            <div className="body-content-element">
-              <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
+            <div className="modal-body__body-content__body-content-element">
+              <h3 className="modal-body__body-content__body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
               <span>{value}</span>
             </div>
           ),
@@ -78,10 +78,10 @@ class ModalWindow extends React.Component {
           action: (key, value) => {
             if (value.some((e) => e instanceof Object)) {
               return (
-                <div className="body-content-element">
-                  {<h3 className="body-content-element-title inside">{`${getNormalizedString(key)}:`}</h3>}
+                <div className="modal-body__body-content__body-content-element">
+                  {<h3 className="modal-body__body-content__body-content-element-title inside">{`${getNormalizedString(key)}:`}</h3>}
                   {value.map((e) => (
-                    <div key={_.uniqueId()} className="body-content-element inside" style={{ paddingLeft: 20 }}>
+                    <div key={_.uniqueId()} className="modal-body__body-content__body-content-element inside" style={{ paddingLeft: 20 }}>
                       {this.mappedBodyContent(e)}
                     </div>
                   ))}
@@ -89,16 +89,16 @@ class ModalWindow extends React.Component {
               );
             }
             return (
-              <div className="body-content-element">
-                <h3 className="body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
+              <div className="modal-body__body-content__body-content-element">
+                <h3 className="modal-body__body-content__body-content-element-title">{`${getNormalizedString(key)}: `}</h3>
                 {key !== 'borders' ? (
                   <span>{_.join(value, ', ')}</span>
                 ) : (
-                  <div className="body-content-element-borders">
+                  <div className="modal-body__body-content__body-content-element-borders">
                     {value.map((alpha3) => (
                       <span
                         key={_.uniqueId()}
-                        className="body-content-element-borders-link"
+                        className="modal-body__body-content__body-content-element-borders-link"
                         href="#"
                         onClick={(e) => {
                           this.handleAutocomplite('name')(e);
@@ -125,8 +125,8 @@ class ModalWindow extends React.Component {
           action: (key, value) => {
             const newMargin = 20;
             return (
-              <div className="body-content-element inside" style={{ paddingLeft: 0 }}>
-                <h3 className="body-content-element-title inside">{`${getNormalizedString(key)}: `}</h3>
+              <div className="modal-body__body-content__body-content-element inside" style={{ paddingLeft: 0 }}>
+                <h3 className="modal-body__body-content__body-content-element-title inside">{`${getNormalizedString(key)}: `}</h3>
                 {this.mappedBodyContent(value, newMargin)}
               </div>
             );
@@ -148,7 +148,7 @@ class ModalWindow extends React.Component {
           return null;
         }
         return (
-          <div className="body-content-element" style={{ marginLeft: margin }} key={_.uniqueId()}>
+          <div className="modal-body__body-content__body-content-element" style={{ marginLeft: margin }} key={_.uniqueId()}>
             {findAction(k, el[k])}
           </div>
         );
@@ -160,7 +160,7 @@ class ModalWindow extends React.Component {
       const { name, id } = element;
       const { uiState: { isOpenEl } } = this.props;
       const openElclassName = cn({
-        'render-element-full-show': true,
+        'render-element__full-show': true,
         [isOpenEl[id].status]: true,
       });
 
@@ -177,33 +177,34 @@ class ModalWindow extends React.Component {
           tabIndex="-1"
           ref={(mainDiv) => { this.mainDiv = mainDiv; }}
         >
-          <div className="render-element-modal-content">
-            <div className="modal-title">
-              <h5 className="modal-title-text">{name}</h5>
+          <div className="render-element__modal-content">
+            <div className="modal-content__modal-title">
+              <h5 className="modal-content__modal-title-text">{name}</h5>
               <span
                 onClick={handleOpenElement(id)}
                 onKeyDown={handleOpenElement(id)}
                 role="button"
                 tabIndex="0"
-                className="modal-title-close"
+                className="modal-content__modal-title-close"
+                data-testid="modal"
               >
                 x
               </span>
             </div>
-            <div className="modal-body">
-              <div className="body-content">
+            <div className="render-element__modal-body">
+              <div className="modal-body__body-content">
                 {this.mappedBodyContent(element)}
               </div>
             </div>
-            <div className="modal-footer">
-              <div className="footer-button-block">
+            <div className="render-element__modal-footer">
+              <div className="modal-footer__footer-button-block">
                 <span
                   onClick={this.handleSwitchToNextElement(id, 'prev')}
                   onKeyDown={() => {}}
                   role="button"
                   tabIndex={0}
                   type="button"
-                  className="footer-button-prev"
+                  className="modal-footer__footer-button-prev"
                 >
                   &lt;
                 </span>
@@ -213,7 +214,7 @@ class ModalWindow extends React.Component {
                   role="button"
                   tabIndex={0}
                   type="button"
-                  className="footer-button-next"
+                  className="modal-footer__footer-button-next"
                 >
                   &gt;
                 </span>

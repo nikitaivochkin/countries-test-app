@@ -44,8 +44,9 @@ class RenderElement extends React.Component {
             tabIndex={0}
             className="render-element"
             style={divStyle}
+            data-testid={name}
           >
-            <span className="render-element-name">{name}</span>
+            <span className="render-element__render-element-name">{name}</span>
           </div>
           {isOpenEl[id].status === 'open' && <ModalWindow element={element} handleOpenElement={this.handleOpenElement} />}
         </>

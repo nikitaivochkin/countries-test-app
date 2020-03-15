@@ -42,6 +42,7 @@ export default class Selects extends React.Component {
           required
           placeholder={placeholder}
           disabled={name === 'subregion' ? !filter.region : null}
+          data-testid={name}
         >
           {getOptions(name)}
         </select>

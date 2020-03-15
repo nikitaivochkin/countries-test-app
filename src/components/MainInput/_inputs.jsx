@@ -16,6 +16,7 @@ export default class Inputs extends React.Component {
           required
           type={(name !== 'callingCodes' || name !== 'numericCode') ? 'text' : 'number'}
           placeholder={placeholder}
+          data-testid={name}
         />
       </div>
     ) : (
@@ -27,30 +28,21 @@ export default class Inputs extends React.Component {
           )
         </p>
         <div className="inputs">
-          <div className="inputs__input">
-            <span>min</span>
-            <input
-              onChange={handleAutocomplite(`${name}Min`)}
-              className={`serch-bar__filters__input serch-bar__filters__input-${name}`}
-              name={`${name}Min`}
-              component="input"
-              required
-              placeholder="Enter num"
-              type="number"
-            />
-          </div>
-          <div className="inputs__input">
-            <span>max</span>
-            <input
-              onChange={handleAutocomplite(`${name}Max`)}
-              className={`serch-bar__filters__input serch-bar__filters__input-${name}`}
-              name={`${name}Max`}
-              component="input"
-              required
-              placeholder="Enter num"
-              type="number"
-            />
-          </div>
+          {['Min', 'Max'].map((selector) => (
+            <div key={`input-${selector}`} className="inputs__input">
+              <span>{_.lowerCase(selector)}</span>
+              <input
+                onChange={handleAutocomplite(`${name}${selector}`)}
+                className={`serch-bar__filters__input serch-bar__filters__input-${name}`}
+                name={`${name}${selector}`}
+                component="input"
+                required
+                placeholder="Enter num"
+                type="number"
+                data-testid={name}
+              />
+            </div>
+          ))}
         </div>
       </div>
     )

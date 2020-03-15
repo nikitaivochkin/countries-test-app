@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/prefer-stateless-function */
 import cn from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +53,7 @@ class MainInput extends React.Component {
       <>
         <div className={filtersClassName}>
           <div className="serch-bar__filters-body">
-            <div onClick={this.handleShowHideAllFilters} onKeyDown={() => {}} className="open-filters">
+            <div onClick={this.handleShowHideAllFilters} onKeyDown={() => {}} role="button" tabIndex={0} className="open-filters">
               {
                   filterStatus === 'hide'
                     ? (<span className="open-filters__link">&darr; Show all filters &darr;</span>)
@@ -80,7 +78,8 @@ class MainInput extends React.Component {
               required
               type="text"
               placeholder="Enter country name"
-              value={filter.name ? filter.name : text}
+              data-testid="name"
+              value={filter.name ? filter.name : ''}
             />
           </div>
           <ReceivedData />
