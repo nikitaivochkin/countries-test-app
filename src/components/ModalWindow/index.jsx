@@ -188,7 +188,7 @@ class ModalWindow extends React.Component {
                 className="modal-content__modal-title-close"
                 data-testid="modal"
               >
-                x
+                &#10006;
               </span>
             </div>
             <div className="render-element__modal-body">
@@ -198,28 +198,20 @@ class ModalWindow extends React.Component {
             </div>
             <div className="render-element__modal-footer">
               <div className="modal-footer__footer-button-block">
-                <span
-                  onClick={this.handleSwitchToNextElement(id, 'prev')}
-                  onKeyDown={() => {}}
-                  role="button"
-                  tabIndex={0}
-                  type="button"
-                  className="modal-footer__footer-button-prev"
-                  data-testid="clickPrev"
-                >
-                  &lt;
-                </span>
-                <span
-                  onClick={this.handleSwitchToNextElement(id, 'next')}
-                  onKeyDown={() => {}}
-                  role="button"
-                  tabIndex={0}
-                  type="button"
-                  className="modal-footer__footer-button-next"
-                  data-testid="clickNext"
-                >
-                  &gt;
-                </span>
+                {['prev', 'next'].map((n) => (
+                  <span
+                    key={_.uniqueId()}
+                    onClick={this.handleSwitchToNextElement(id, n)}
+                    onKeyDown={() => {}}
+                    role="button"
+                    tabIndex={0}
+                    type="button"
+                    className={`modal-footer__footer-button-${n}`}
+                    data-testid={`click${_.capitalize(n)}`}
+                  >
+                    {n === 'prev' ? <span>&lt;</span> : <span>&gt;</span>}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
