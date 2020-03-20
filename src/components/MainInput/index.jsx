@@ -20,6 +20,7 @@ const actionCreators = {
   updateText: actions.updateText,
   buildFilter: actions.buildFilter,
   findElementBySelector: actions.findElementBySelector,
+  resetFilters: actions.resetFilters,
 };
 
 class MainInput extends React.Component {
@@ -35,13 +36,18 @@ class MainInput extends React.Component {
     findElementBySelector();
   };
 
+  handleResetFilters = () => {
+    const { resetFilters } = this.props;
+    resetFilters();
+  }
+
   handleShowHideAllFilters = () => {
     const { filterStatus } = this.state;
     this.setState({ filterStatus: filterStatus === 'hide' ? 'show' : 'hide' });
   };
 
   render() {
-    const { text, elements: { filter } } = this.props;
+    const { elements: { filter } } = this.props;
     const { filterStatus } = this.state;
 
     const filtersClassName = cn({
@@ -61,10 +67,10 @@ class MainInput extends React.Component {
                 }
             </div>
             <div className="serch-bar__selects">
-              <Selects text={text} filter={filter} handleAutocomplite={this.handleAutocomplite} />
+              <Selects filter={filter} handleAutocomplite={this.handleAutocomplite} />
             </div>
             <div className="serch-bar__inputs">
-              <Inputs handleAutocomplite={this.handleAutocomplite} />
+              <Inputs filter={filter} handleAutocomplite={this.handleAutocomplite} />
             </div>
           </div>
         </div>
@@ -82,6 +88,18 @@ class MainInput extends React.Component {
               value={filter.name ? filter.name : ''}
             />
           </div>
+          {Object.keys(filter).length !== 0 && (
+            <div
+              onClick={this.handleResetFilters}
+              className="serch-bar__filters__reset"
+              onKeyDown={() => {}}
+              role="button"
+              tabIndex={0}
+              data-testid="clearFilters"
+            >
+              <button className="serch-bar__filters__reset__btn" type="button">Reset all filters</button>
+            </div>
+          )}
           <ReceivedData />
         </div>
       </>

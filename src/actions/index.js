@@ -12,6 +12,8 @@ export const nextOrPrevElement = createAction('SWITCH_TO_NEXT_OR_PREV_ELEMENT');
 
 export const findElementBySelector = createAction('FIND_ELEMENT_BY_SELECTOR');
 
+export const resetFilters = createAction('RESET-FILTERS');
+
 export const fetchElementsRequest = createAction('NEW_SEARCH_REQUEST');
 export const fetchElementsSuccess = createAction('NEW_SEARCH_SUCCESS');
 export const fetchElementsFailure = createAction('NEW_SEARCH_FAILURE');
