@@ -4,7 +4,7 @@ import { inputs } from '../../assets/options.js';
 
 export default class Inputs extends React.Component {
   render() {
-    const { handleAutocomplite } = this.props;
+    const { handleAutocomplite, filter } = this.props;
 
     return inputs.map(([name, placeholder, key]) => (name !== 'population' && name !== 'area' ? (
       <div key={`input-${key}`} className="serch-bar__filters__input">
@@ -39,7 +39,8 @@ export default class Inputs extends React.Component {
                 required
                 placeholder="Enter num"
                 type="number"
-                data-testid={name}
+                value={filter[`${name}${selector}`] ? filter[`${name}${selector}`] : ''}
+                data-testid={`${name}-${selector}`}
               />
             </div>
           ))}

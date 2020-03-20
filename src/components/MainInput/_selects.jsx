@@ -6,7 +6,7 @@ import {
 
 export default class Selects extends React.Component {
   render() {
-    const { text, filter, handleAutocomplite } = this.props;
+    const { filter, handleAutocomplite } = this.props;
 
     const options = {
       region: regions,
@@ -38,7 +38,7 @@ export default class Selects extends React.Component {
           className={`serch-bar__filters__select serch-bar__filters__select-${name}`}
           name={name}
           component="select"
-          value={filter[name] ? filter[name] : text}
+          value={filter[name] ? filter[name] : ''}
           required
           placeholder={placeholder}
           disabled={name === 'subregion' ? !filter.region : null}

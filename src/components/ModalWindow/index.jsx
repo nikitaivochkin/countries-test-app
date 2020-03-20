@@ -205,6 +205,7 @@ class ModalWindow extends React.Component {
                   tabIndex={0}
                   type="button"
                   className="modal-footer__footer-button-prev"
+                  data-testid="clickPrev"
                 >
                   &lt;
                 </span>
@@ -215,6 +216,7 @@ class ModalWindow extends React.Component {
                   tabIndex={0}
                   type="button"
                   className="modal-footer__footer-button-next"
+                  data-testid="clickNext"
                 >
                   &gt;
                 </span>

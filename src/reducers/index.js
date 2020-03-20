@@ -4,6 +4,8 @@ import { handleActions } from 'redux-actions';
 import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
+let allIdsForUiState;
+
 const elementsFetchState = handleActions({
   [actions.fetchElementsRequest]() {
     return 'requested';
@@ -19,6 +21,9 @@ const elementsFetchState = handleActions({
 const text = handleActions({
   [actions.updateText](_state, { payload: { value } }) {
     return value !== 'reset' ? value : '';
+  },
+  [actions.resetFilters]() {
+    return '';
   },
 }, '');
 
@@ -81,6 +86,7 @@ const elements = handleActions({
         return action();
       });
       countries = filtred;
+      allIdsForUiState = _.keys(countries);
       return filtred;
     });
     return { byId, allIds: _.keys(countries), filter };
@@ -111,7 +117,7 @@ const elements = handleActions({
       },
       {
         type: 'emptyValue',
-        check: () => (value.length === 0 || value === 'reset'),
+        check: () => (value.length === 0 || value === 'reset' || value === ''),
         action: () => _.omit(filter, `${selector}`),
       },
       {
@@ -130,30 +136,36 @@ const elements = handleActions({
     const updatedFilter = action();
     return { byId, allIds, filter: updatedFilter };
   },
+  [actions.resetFilters](state) {
+    const { byId, allIds } = state;
+    return { byId, allIds, filter: {} };
+  },
 }, { byId: {}, allIds: [], filter: {} });
 
 const uiState = handleActions({
   [actions.fetchElementsSuccess](state, { payload: { data } }) {
-    const { currentSelecrot } = state;
     const setIdAndStatusForEachEl = data.map((e) => {
       const setOpenStatus = _.set(e, 'status', 'close');
       return _.pick(setOpenStatus, ['id', 'status']);
     });
+    const initialIsOpenEl = _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id);
     return {
-      currentSelecrot,
       isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
+      initialIsOpenEl,
     };
+  },
+  [actions.findElementBySelector](state) {
+    const { initialIsOpenEl } = state;
+    const els = initialIsOpenEl;
+    return { isOpenEl: _.pick(els, allIdsForUiState.map((e) => Number(e))), initialIsOpenEl };
   },
   [actions.openElement](state, { payload: { isOpenEl: { id } } }) {
-    const { currentSelecrot, isOpenEl } = state;
+    const { isOpenEl, initialIsOpenEl } = state;
     const switcher = (s) => (s === 'close' ? 'open' : 'close');
-    return {
-      currentSelecrot,
-      isOpenEl: _.update(isOpenEl, `${id}.status`, switcher),
-    };
+    return { isOpenEl: _.update(isOpenEl, `${id}.status`, switcher), initialIsOpenEl };
   },
   [actions.nextOrPrevElement](state, { payload: { isOpenEl: { id, type } } }) {
-    const { currentSelecrot, isOpenEl } = state;
+    const { isOpenEl, initialIsOpenEl } = state;
     const keys = _.keys(isOpenEl);
     const currentElIndex = _.findIndex(keys, (e) => e === id);
     const firstEl = _.head(keys);
@@ -163,8 +175,8 @@ const uiState = handleActions({
     const switcher = (s) => (s === 'close' ? 'open' : 'close');
     const updatedCurrentEl = _.update(isOpenEl, `${id}.status`, switcher);
     return {
-      currentSelecrot,
       isOpenEl: _.update(updatedCurrentEl, `${type === 'next' ? nextId : prevId}.status`, switcher),
+      initialIsOpenEl,
     };
   },
 }, {});

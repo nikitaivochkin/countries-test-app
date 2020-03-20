@@ -26,7 +26,10 @@ let initialState = {
   text: '',
   elementsFetchState: 'finished',
   elements: { byId: mainData, allIds: [...allIdsElements], filter: {} },
-  uiState: { isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id) },
+  uiState: {
+    isOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
+    initialIsOpenEl: _.mapKeys({ ...setIdAndStatusForEachEl }, (key) => key.id),
+  },
   form: {},
 };
 
@@ -165,5 +168,113 @@ describe('test modal window', () => {
     expect(result.children.length).toBe(1);
     expect(store.getState().elements.filter).toStrictEqual({ name: 'Finland' });
     expect(store.getState().uiState.isOpenEl[elId].status).toBe('close');
+  });
+
+  it('click to next', () => {
+    const {
+      getByTestId,
+      store,
+    } = renderWithRedux(<App />, { initialState });
+
+    const nameInput = getByTestId('name');
+    const populationMinInput = getByTestId('population-Min');
+
+    fireEvent.change(populationMinInput, { target: { value: 500 } });
+    fireEvent.change(nameInput, { target: { value: '' } });
+
+    const element1 = getByTestId('China');
+    const elId1 = store.getState().elements.allIds[0];
+    const elId2 = store.getState().elements.allIds[1];
+
+    fireEvent.click(element1, { bubbles: true });
+
+    const clickNext = getByTestId('clickNext');
+    fireEvent.click(clickNext, { bubbles: true });
+
+    const result = getByTestId('result');
+
+    initialState = store.getState();
+    expect(result.children.length).toBe(3);
+    expect(store.getState().elements.filter).toStrictEqual({ populationMin: '500' });
+    expect(store.getState().uiState.isOpenEl[elId2].status).toBe('open');
+    expect(store.getState().uiState.isOpenEl[elId1].status).toBe('close');
+  });
+
+  it('click to next one more time', () => {
+    const {
+      getByTestId,
+      store,
+    } = renderWithRedux(<App />, { initialState });
+
+    const elId1 = store.getState().elements.allIds[0];
+    const elId2 = store.getState().elements.allIds[1];
+
+    const clickNext = getByTestId('clickNext');
+    fireEvent.click(clickNext, { bubbles: true });
+
+    const result = getByTestId('result');
+
+    initialState = store.getState();
+    expect(result.children.length).toBe(3);
+    expect(store.getState().elements.filter).toStrictEqual({ populationMin: '500' });
+    expect(store.getState().uiState.isOpenEl[elId2].status).toBe('close');
+    expect(store.getState().uiState.isOpenEl[elId1].status).toBe('open');
+  });
+
+  it('click to prev', () => {
+    const {
+      getByTestId,
+      store,
+    } = renderWithRedux(<App />, { initialState });
+
+    const elId1 = store.getState().elements.allIds[0];
+    const elId2 = store.getState().elements.allIds[1];
+
+    const clickPrev = getByTestId('clickPrev');
+    fireEvent.click(clickPrev, { bubbles: true });
+
+    const result = getByTestId('result');
+
+    initialState = store.getState();
+    expect(result.children.length).toBe(3);
+    expect(store.getState().elements.filter).toStrictEqual({ populationMin: '500' });
+    expect(store.getState().uiState.isOpenEl[elId2].status).toBe('open');
+    expect(store.getState().uiState.isOpenEl[elId1].status).toBe('close');
+  });
+
+  it('close modal window again', () => {
+    const {
+      container,
+      getByTestId,
+      store,
+    } = renderWithRedux(<App />, { initialState });
+
+    const closeBtn = container.querySelector('.modal-content__modal-title-close');
+    fireEvent.click(closeBtn, { bubbles: true });
+
+    const elId1 = store.getState().elements.allIds[0];
+    const elId2 = store.getState().elements.allIds[1];
+    const result = getByTestId('result');
+
+    initialState = store.getState();
+    expect(result.children.length).toBe(2);
+    expect(store.getState().elements.filter).toStrictEqual({ populationMin: '500' });
+    expect(store.getState().uiState.isOpenEl[elId1].status).toBe('close');
+    expect(store.getState().uiState.isOpenEl[elId2].status).toBe('close');
+  });
+
+  it('clear filters', () => {
+    const {
+      getByTestId,
+      store,
+    } = renderWithRedux(<App />, { initialState });
+
+    const clearFilters = getByTestId('clearFilters');
+    fireEvent.click(clearFilters, { bubbles: true });
+    const populationMinInput = getByTestId('population-Min');
+
+    initialState = store.getState();
+    expect(populationMinInput.value).toBe('');
+    expect(store.getState().elements.filter).toStrictEqual({ });
   });
 });
