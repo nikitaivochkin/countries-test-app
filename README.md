@@ -1,4 +1,4 @@
-REST Countries (React, Redux).
+REST Countries (React, Redux, Jest).
 
 https://countries-test-app.now.sh
 
